@@ -570,13 +570,18 @@
 
     <!-- View tabs -->
     <div class="glass flex items-center p-1 gap-1 no-sel" style="border-radius: 9999px;">
-      <button class="view-tab v-pill px-3 py-1.5" data-view="network">Rete</button>
-      <button class="view-tab v-pill px-3 py-1.5" data-view="energy">Energia</button>
-      <button class="view-tab v-pill px-3 py-1.5" data-view="compute">Compute</button>
-      <button class="view-tab v-pill px-3 py-1.5" data-view="economics">Economics</button>
+      <button class="view-tab v-pill px-3 py-1.5" data-view="all" data-i18n="tab.all">Tutti</button>
+      <button class="view-tab v-pill px-3 py-1.5" data-view="network" data-i18n="tab.network">Rete</button>
+      <button class="view-tab v-pill px-3 py-1.5" data-view="energy" data-i18n="tab.energy">Energia</button>
+      <button class="view-tab v-pill px-3 py-1.5" data-view="compute" data-i18n="tab.compute">Compute</button>
+      <button class="view-tab v-pill px-3 py-1.5" data-view="economics" data-i18n="tab.economics">Economics</button>
     </div>
 
     <div class="flex items-center gap-2 no-sel">
+      <div class="glass flex items-center p-0.5 no-sel" style="border-radius:9999px;">
+        <button class="lang-tab v-pill px-2.5 py-1" data-lang="it">IT</button>
+        <button class="lang-tab v-pill px-2.5 py-1" data-lang="en">EN</button>
+      </div>
       <button id="btn-theme" class="v-btn-secondary text-xs flex items-center gap-1.5" title="Tema chiaro / scuro (L)">
         <svg id="ico-theme" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
         <span id="theme-label">Light</span>
@@ -596,10 +601,10 @@
     <div class="glass p-4">
       <div class="flex items-center justify-between mb-3">
         <div>
-          <div class="micro-label">Modello</div>
-          <div class="text-sm font-semibold mt-0.5">Use Case</div>
+          <div class="micro-label" data-i18n="model.kicker">Modello</div>
+          <div class="text-sm font-semibold mt-0.5" data-i18n="model.title">Use Case</div>
         </div>
-        <span class="v-pill v-pill-yellow">4 site</span>
+        <span class="v-pill v-pill-yellow" data-i18n="model.count">4 siti</span>
       </div>
 
       <div class="space-y-2" id="usecase-list">
@@ -608,20 +613,20 @@
     </div>
 
     <div class="glass p-4 flex-1 v-scroll overflow-y-auto">
-      <div class="micro-label mb-2">Scenari Unit Economics</div>
-      <div class="text-[11px] text-volta-white/60 mb-3 leading-snug">
+      <div class="micro-label mb-2" data-i18n="scen.title">Scenari Unit Economics</div>
+      <div class="text-[11px] text-volta-white/60 mb-3 leading-snug" data-i18n="scen.sub">
         Preset dal modello (8 GPU, CapEx €340k). Modifica i parametri per simulare.
       </div>
       <div class="space-y-2" id="scenario-buttons">
         <!-- populated by JS -->
       </div>
 
-      <div class="micro-label mt-5 mb-2">Parametri</div>
+      <div class="micro-label mt-5 mb-2" data-i18n="params.title">Parametri</div>
 
       <div class="space-y-4">
         <div>
           <div class="flex justify-between items-baseline">
-            <label class="text-[12px] text-volta-white/80">Prezzo</label>
+            <label class="text-[12px] text-volta-white/80" data-i18n="param.price">Prezzo</label>
             <div class="font-mono text-sm"><span id="val-price">3.00</span> <span class="text-volta-white/45 text-[11px]">€/GPU-h</span></div>
           </div>
           <input type="range" id="slider-price" class="v-slider mt-2" min="1.5" max="7" step="0.05" value="3" />
@@ -632,41 +637,41 @@
 
         <div>
           <div class="flex justify-between items-baseline">
-            <label class="text-[12px] text-volta-white/80">Utilizzo vendibile</label>
+            <label class="text-[12px] text-volta-white/80" data-i18n="param.util">Utilizzo vendibile</label>
             <div class="font-mono text-sm"><span id="val-util">72</span><span class="text-volta-white/45 text-[11px]">%</span></div>
           </div>
           <input type="range" id="slider-util" class="v-slider green mt-2" min="40" max="95" step="1" value="72" />
           <div class="flex justify-between text-[10px] text-volta-white/35 mt-1">
-            <span>40%</span><span>frontiera 65–70%</span><span>95%</span>
+            <span>40%</span><span data-i18n="param.util.mid">frontiera 65–70%</span><span>95%</span>
           </div>
         </div>
 
         <div>
           <div class="flex justify-between items-baseline">
-            <label class="text-[12px] text-volta-white/80">Energia blended</label>
+            <label class="text-[12px] text-volta-white/80" data-i18n="param.energy">Energia blended</label>
             <div class="font-mono text-sm"><span id="val-energy">0.150</span><span class="text-volta-white/45 text-[11px]">€/kWh</span></div>
           </div>
           <input type="range" id="slider-energy" class="v-slider blue mt-2" min="0.05" max="0.28" step="0.005" value="0.15" />
           <div class="flex justify-between text-[10px] text-volta-white/35 mt-1">
-            <span>FV puro</span><span>mix</span><span>rete C&amp;I IT</span>
+            <span data-i18n="param.energy.lo">FV puro</span><span data-i18n="param.energy.mid">mix</span><span data-i18n="param.energy.hi">rete C&amp;I IT</span>
           </div>
         </div>
 
         <div>
           <div class="flex justify-between items-baseline">
-            <label class="text-[12px] text-volta-white/80">Fleet</label>
-            <div class="font-mono text-sm"><span id="val-fleet">12</span> <span class="text-volta-white/45 text-[11px]">nodi · 96 GPU</span></div>
+            <label class="text-[12px] text-volta-white/80" data-i18n="param.fleet">Fleet</label>
+            <div class="font-mono text-sm"><span id="val-fleet">12</span> <span class="text-volta-white/45 text-[11px]" id="fleet-unit">nodi · 96 GPU</span></div>
           </div>
           <input type="range" id="slider-fleet" class="v-slider mt-2" min="1" max="200" step="1" value="12" />
           <div class="flex justify-between text-[10px] text-volta-white/35 mt-1">
-            <span>1 pilota</span><span>scale-up</span><span>fleet 200</span>
+            <span data-i18n="param.fleet.lo">1 pilota</span><span data-i18n="param.fleet.mid">scale-up</span><span data-i18n="param.fleet.hi">fleet 200</span>
           </div>
         </div>
       </div>
 
       <div class="mt-5 p-3 rounded-xl border border-volta-white/10 bg-volta-white/[0.03]">
-        <div class="micro-label mb-1">Frontiera dell'investibilità</div>
-        <div class="text-[11px] leading-snug text-volta-white/65">
+        <div class="micro-label mb-1" data-i18n="frontier.title">Frontiera dell'investibilità</div>
+        <div class="text-[11px] leading-snug text-volta-white/65" data-i18n-html="frontier.body">
           Per stare sotto la <span class="text-volta-yellow font-semibold">vita GPU (3 anni)</span>: ≥€3,5/GPU-h con utilizzo ≥65% oppure ≥€3 con utilizzo ≥75%.
         </div>
       </div>
@@ -678,55 +683,55 @@
     <div class="glass p-4">
       <div class="flex items-center justify-between">
         <div>
-          <div class="micro-label">Live · per nodo</div>
-          <div class="text-sm font-semibold mt-0.5">Stato fleet</div>
+          <div class="micro-label" data-i18n="live.pernodo">Live · per nodo</div>
+          <div class="text-sm font-semibold mt-0.5" data-i18n="live.stato">Stato fleet</div>
         </div>
         <span id="status-pill" class="v-pill v-pill-green">Healthy</span>
       </div>
 
       <div class="mt-4 grid grid-cols-2 gap-3">
         <div class="rounded-xl border border-volta-white/10 bg-volta-white/[0.03] p-3">
-          <div class="micro-label">Ricavi annui</div>
+          <div class="micro-label" data-i18n="kpi.revenue">Ricavi annui</div>
           <div class="kpi-val mt-1"><span id="kpi-revenue">€151k</span></div>
-          <div class="kpi-sub" id="kpi-revenue-sub">€/GPU-h ricavi netti</div>
+          <div class="kpi-sub" id="kpi-revenue-sub">—</div>
         </div>
         <div class="rounded-xl border border-volta-white/10 bg-volta-white/[0.03] p-3">
           <div class="micro-label">EBITDA</div>
           <div class="kpi-val mt-1"><span id="kpi-ebitda">€101k</span></div>
-          <div class="kpi-sub"><span id="kpi-ebitda-margin">67%</span> margine</div>
+          <div class="kpi-sub"><span id="kpi-ebitda-margin">67%</span> <span data-i18n="kpi.margin">margine</span></div>
         </div>
         <div class="rounded-xl border border-volta-white/10 bg-volta-white/[0.03] p-3">
           <div class="micro-label">Payback</div>
-          <div class="kpi-val mt-1"><span id="kpi-payback">3.4</span><span class="text-volta-white/45 text-base"> anni</span></div>
-          <div class="kpi-sub" id="kpi-payback-sub">vs vita GPU 3 anni</div>
+          <div class="kpi-val mt-1"><span id="kpi-payback">3.4</span><span class="text-volta-white/45 text-base" id="kpi-payback-unit"> anni</span></div>
+          <div class="kpi-sub" id="kpi-payback-sub">—</div>
         </div>
         <div class="rounded-xl border border-volta-white/10 bg-volta-white/[0.03] p-3">
           <div class="micro-label">IRR 4y</div>
           <div class="kpi-val mt-1"><span id="kpi-irr">11%</span></div>
-          <div class="kpi-sub" id="kpi-irr-sub">net of residual</div>
+          <div class="kpi-sub" id="kpi-irr-sub">—</div>
         </div>
       </div>
 
       <div class="mt-3 p-3 rounded-xl border border-volta-white/10 bg-volta-white/[0.03]">
         <div class="flex justify-between items-baseline">
-          <div class="micro-label">Frontiera</div>
-          <div class="text-[11px] text-volta-white/55">Prezzo × Utilizzo</div>
+          <div class="micro-label" data-i18n="frontier.short">Frontiera</div>
+          <div class="text-[11px] text-volta-white/55" data-i18n="frontier.px">Prezzo × Utilizzo</div>
         </div>
         <div class="v-bar mt-2"><div id="bar-frontier" style="width: 50%; background: var(--volta-yellow);"></div></div>
         <div class="flex justify-between text-[10px] text-volta-white/45 mt-1">
-          <span>commodity</span><span>edge</span><span>sovereign</span>
+          <span data-i18n="frontier.commodity">commodity</span><span data-i18n="frontier.edge">edge</span><span data-i18n="frontier.sovereign">sovereign</span>
         </div>
       </div>
     </div>
 
     <div class="glass p-4">
-      <div class="micro-label">Live · ora corrente</div>
+      <div class="micro-label" data-i18n="live.now">Live · ora corrente</div>
 
       <div class="mt-3 space-y-3">
         <div>
           <div class="flex justify-between text-[11px]">
             <span class="text-volta-white/70 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-volta-yellow"></span> Solare prodotto
+              <span class="w-2 h-2 rounded-full bg-volta-yellow"></span> <span data-i18n="live.solar">Solare prodotto</span>
             </span>
             <span class="font-mono text-volta-white"><span id="kpi-solar-now">0</span> kW</span>
           </div>
@@ -736,7 +741,7 @@
         <div>
           <div class="flex justify-between text-[11px]">
             <span class="text-volta-white/70 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full" style="background:#22c55e;"></span> Batteria stoccata
+              <span class="w-2 h-2 rounded-full" style="background:#22c55e;"></span> <span data-i18n="live.battery">Batteria stoccata</span>
             </span>
             <span class="font-mono text-volta-white"><span id="kpi-battery-now">0</span> kWh</span>
           </div>
@@ -746,7 +751,7 @@
         <div>
           <div class="flex justify-between text-[11px]">
             <span class="text-volta-white/70 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full" style="background:#a78bfa;"></span> Consumi case + biz
+              <span class="w-2 h-2 rounded-full" style="background:#a78bfa;"></span> <span data-i18n="live.load">Consumi case + biz</span>
             </span>
             <span class="font-mono text-volta-white"><span id="kpi-load-now">0</span> kW</span>
           </div>
@@ -756,7 +761,7 @@
         <div>
           <div class="flex justify-between text-[11px]">
             <span class="text-volta-white/70 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full" style="background: var(--volta-blue);"></span> Compute venduto
+              <span class="w-2 h-2 rounded-full" style="background: var(--volta-blue);"></span> <span data-i18n="live.compute">Compute venduto</span>
             </span>
             <span class="font-mono text-volta-white"><span id="kpi-compute-now">0</span> kW</span>
           </div>
@@ -766,7 +771,7 @@
         <div>
           <div class="flex justify-between text-[11px]">
             <span class="text-volta-white/70 flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full" style="background: var(--volta-red);"></span> Grid net (import / export)
+              <span class="w-2 h-2 rounded-full" style="background: var(--volta-red);"></span> <span data-i18n="live.grid">Grid net (import / export)</span>
             </span>
             <span class="font-mono text-volta-white"><span id="kpi-grid-now">0</span> kW</span>
           </div>
@@ -776,11 +781,11 @@
 
       <div class="mt-4 grid grid-cols-2 gap-2">
         <div class="rounded-lg border border-volta-white/10 bg-volta-white/[0.03] px-3 py-2">
-          <div class="text-[10px] uppercase tracking-wide text-volta-white/40">Compute now</div>
+          <div class="text-[10px] uppercase tracking-wide text-volta-white/40" data-i18n="live.computenow">Compute now</div>
           <div class="text-sm font-semibold text-volta-white" id="kpi-rev-rate">€0/h</div>
         </div>
         <div class="rounded-lg border border-volta-white/10 bg-volta-white/[0.03] px-3 py-2">
-          <div class="text-[10px] uppercase tracking-wide text-volta-white/40">CO₂ evitata</div>
+          <div class="text-[10px] uppercase tracking-wide text-volta-white/40" data-i18n="live.co2">CO₂ evitata</div>
           <div class="text-sm font-semibold text-volta-white" id="kpi-co2">0 kg/h</div>
         </div>
       </div>
@@ -788,7 +793,7 @@
 
     <div class="glass p-4">
       <div class="flex justify-between items-baseline mb-2">
-        <div class="micro-label">Ricavi cumulati · giornata</div>
+        <div class="micro-label" data-i18n="live.dayrev">Ricavi cumulati · giornata</div>
         <div class="font-mono text-sm" id="kpi-day-rev">€0</div>
       </div>
       <canvas id="spark-revenue" class="spark"></canvas>
@@ -804,10 +809,10 @@
           <svg id="ico-pause" width="12" height="12" viewBox="0 0 12 12" style="display:none;"><rect x="2" y="1" width="3" height="10" fill="currentColor"/><rect x="7" y="1" width="3" height="10" fill="currentColor"/></svg>
         </button>
         <div>
-          <div class="text-[10px] uppercase tracking-wider text-volta-white/40">Tempo</div>
+          <div class="text-[10px] uppercase tracking-wider text-volta-white/40" data-i18n="time.label">Tempo</div>
           <div class="flex items-baseline gap-2 mt-0.5">
             <div class="text-base font-semibold font-mono tabular-nums" id="time-display">12:00</div>
-            <div class="text-[11px] text-volta-white/55" id="time-day">Lun · estate</div>
+            <div class="text-[11px] text-volta-white/55" id="time-day">—</div>
           </div>
         </div>
       </div>
@@ -823,7 +828,7 @@
       </div>
 
       <div class="flex flex-col items-end">
-        <div class="text-[10px] uppercase tracking-wider text-volta-white/40">Speed</div>
+        <div class="text-[10px] uppercase tracking-wider text-volta-white/40" data-i18n="speed.label">Speed</div>
         <div class="flex items-center gap-1 mt-1">
           <button class="v-pill v-pill-neutral speed-btn" data-speed="60">1m</button>
           <button class="v-pill v-pill-yellow speed-btn" data-speed="300">5m</button>
@@ -852,19 +857,19 @@
 
       <div class="grid grid-cols-2 gap-2 mt-3">
         <div class="rounded-lg border border-volta-white/10 bg-volta-white/[0.03] px-3 py-2">
-          <div class="text-[10px] uppercase tracking-wide text-volta-white/40">FV picco</div>
+          <div class="text-[10px] uppercase tracking-wide text-volta-white/40" data-i18n="sd.pv">FV picco</div>
           <div class="text-sm font-semibold mt-0.5" id="sd-pv">— kWp</div>
         </div>
         <div class="rounded-lg border border-volta-white/10 bg-volta-white/[0.03] px-3 py-2">
-          <div class="text-[10px] uppercase tracking-wide text-volta-white/40">Batteria</div>
+          <div class="text-[10px] uppercase tracking-wide text-volta-white/40" data-i18n="sd.bess">Batteria</div>
           <div class="text-sm font-semibold mt-0.5" id="sd-bess">— kWh</div>
         </div>
         <div class="rounded-lg border border-volta-white/10 bg-volta-white/[0.03] px-3 py-2">
-          <div class="text-[10px] uppercase tracking-wide text-volta-white/40">Nodi GPU</div>
+          <div class="text-[10px] uppercase tracking-wide text-volta-white/40" data-i18n="sd.nodes">Nodi GPU</div>
           <div class="text-sm font-semibold mt-0.5" id="sd-nodes">— × 8 GPU</div>
         </div>
         <div class="rounded-lg border border-volta-white/10 bg-volta-white/[0.03] px-3 py-2">
-          <div class="text-[10px] uppercase tracking-wide text-volta-white/40">Workload</div>
+          <div class="text-[10px] uppercase tracking-wide text-volta-white/40" data-i18n="sd.workload">Workload</div>
           <div class="text-sm font-semibold mt-0.5" id="sd-workload">—</div>
         </div>
       </div>
@@ -872,22 +877,22 @@
       <!-- CER-only: neighbourhood composition + value stack -->
       <div id="sd-cer" class="mt-3" style="display:none;">
         <div class="rounded-xl border border-volta-white/10 bg-volta-white/[0.03] p-3">
-          <div class="micro-label mb-2">Composizione quartiere-CER</div>
+          <div class="micro-label mb-2" data-i18n="sd.cerComp">Composizione quartiere-CER</div>
           <div class="flex items-center gap-3 text-[11px]">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm" style="background:#FFE42B;"></span><b id="sd-cer-prosumer">4</b>&nbsp;prosumer</span>
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm" style="background:#5b6472;"></span><b id="sd-cer-consumer">3</b>&nbsp;consumer</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm" style="background:#FFE42B;"></span><b id="sd-cer-prosumer">4</b>&nbsp;<span data-i18n="tag.prosumer">prosumer</span></span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm" style="background:#5b6472;"></span><b id="sd-cer-consumer">3</b>&nbsp;<span data-i18n="tag.consumer">consumer</span></span>
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm" style="background:#359EFE;"></span><b id="sd-cer-compute">2</b>&nbsp;compute</span>
           </div>
-          <div class="micro-label mt-3 mb-2">Stack di valore · €/MWh</div>
+          <div class="micro-label mt-3 mb-2" data-i18n="sd.valueStack">Stack di valore · €/MWh</div>
           <div id="sd-cer-stack" class="space-y-1.5"></div>
-          <div class="text-[10px] text-volta-white/45 mt-2 leading-snug">
+          <div class="text-[10px] text-volta-white/45 mt-2 leading-snug" data-i18n="sd.cerNote">
             Il compute Volta sposta i kWh dal valore basso del RID al valore alto dell'energia condivisa incentivata + autoconsumo.
           </div>
         </div>
       </div>
 
       <div class="mt-4">
-        <div class="micro-label mb-2">Vantaggio strutturale</div>
+        <div class="micro-label mb-2" data-i18n="sd.advantages">Vantaggio strutturale</div>
         <ul class="space-y-1.5 text-[12px] text-volta-white/80" id="sd-advantages"></ul>
       </div>
 
@@ -910,34 +915,34 @@
         </svg>
       </div>
 
-      <div class="micro-label mb-3">Compute · Digital Twin</div>
-      <h1 class="text-4xl font-semibold tracking-tight leading-tight">
+      <div class="micro-label mb-3" data-i18n="intro.kicker">Compute · Digital Twin</div>
+      <h1 class="text-4xl font-semibold tracking-tight leading-tight" data-i18n-html="intro.head">
         Energia distribuita.<br>
         <span class="text-volta-yellow">Compute sovrano.</span>
       </h1>
-      <p class="mt-5 text-base text-volta-white/65 leading-relaxed">
-        Esplora il modello Volta come un sistema vivo: 4 use case behind-the-meter,<br>
-        flussi di energia e capacità GPU che si attivano in tempo reale, parametri<br>
+      <p class="mt-5 text-base text-volta-white/65 leading-relaxed" data-i18n="intro.body">
+        Esplora il modello Volta come un sistema vivo: 4 use case behind-the-meter,
+        flussi di energia e capacità GPU che si attivano in tempo reale, parametri
         di unit economics modificabili — esattamente come nel white paper.
       </p>
 
       <div class="flex items-center justify-center gap-3 mt-8">
-        <button id="btn-enter" class="v-btn-primary breathe">Entra nel digital twin</button>
-        <button id="btn-skip-intro" class="v-btn-secondary">Salta intro</button>
+        <button id="btn-enter" class="v-btn-primary breathe" data-i18n="intro.enter">Entra nel digital twin</button>
+        <button id="btn-skip-intro" class="v-btn-secondary" data-i18n="intro.skip">Salta intro</button>
       </div>
 
       <div class="mt-10 grid grid-cols-3 gap-4 text-left">
         <div class="rounded-xl border border-volta-white/10 bg-volta-white/[0.03] p-4">
           <div class="text-volta-yellow text-2xl font-semibold tabular-nums">945 TWh</div>
-          <div class="text-[11px] text-volta-white/55 mt-1">Consumo data center globale 2030 · IEA</div>
+          <div class="text-[11px] text-volta-white/55 mt-1" data-i18n="intro.stat1">Consumo data center globale 2030 · IEA</div>
         </div>
         <div class="rounded-xl border border-volta-white/10 bg-volta-white/[0.03] p-4">
           <div class="text-volta-blue text-2xl font-semibold tabular-nums">3,5×</div>
-          <div class="text-[11px] text-volta-white/55 mt-1">Capacità data center 82→219 GW 2025-30 · McKinsey</div>
+          <div class="text-[11px] text-volta-white/55 mt-1" data-i18n="intro.stat2">Capacità data center 82→219 GW 2025-30 · McKinsey</div>
         </div>
         <div class="rounded-xl border border-volta-white/10 bg-volta-white/[0.03] p-4">
           <div style="color:#22c55e;" class="text-2xl font-semibold tabular-nums">€5,7 mld</div>
-          <div class="text-[11px] text-volta-white/55 mt-1">D.M. 414/2023 CER · fondo perduto fino al 40%</div>
+          <div class="text-[11px] text-volta-white/55 mt-1" data-i18n="intro.stat3">D.M. 414/2023 CER · fondo perduto fino al 40%</div>
         </div>
       </div>
     </div>
@@ -1021,6 +1026,28 @@ const USECASES = [
       { label: 'TIP energia condivisa (≤200 kW)', val: 110, color: '#22c55e' },
       { label: 'RID eccedenza immessa', val: 95,  color: '#359EFE' }
     ],
+    en: {
+      name: 'Energy Community',
+      tag: 'Renewable Energy Community',
+      workload: 'RAG / local enterprise inference',
+      desc: 'A real REC neighbourhood: rooftop-PV prosumers share energy with the community\'s consumers. The Volta node is the "schedulable load" that maximises incentivised shared energy instead of exporting it at low value to the grid.',
+      advantages: [
+        'Shared-energy tariff: 80/70/60 €/MWh (≤200 / ≤600 / ≤1000 kW) + max(0; 180−PUN) correction, cap 120 €/MWh, 20 years',
+        'Zonal uplift: +4 €/MWh Centre, +10 €/MWh North',
+        'NRRP 40% CapEx grant — only municipalities <5,000 inhab.; combinable with the tariff (reduced)',
+        'RID compatible: values physical surplus. Compute shifts kWh from grid sale → shared energy + self-consumption'
+      ],
+      incentive: {
+        title: 'Decree 414/2023 — CACER · GSE',
+        value: '60–120 €/MWh',
+        desc: '20-year incentive tariff on shared energy (size-based fixed part + PUN correction, cap 120 €/MWh) + zonal uplift. NRRP 40% capital grant in municipalities <5,000 inhab. Separate dedicated withdrawal (RID) on injected surplus.'
+      },
+      valueStack: [
+        { label: 'Avoided bill (self-consumption)', val: 220, color: '#FFE42B' },
+        { label: 'Shared-energy tariff (≤200 kW)', val: 110, color: '#22c55e' },
+        { label: 'RID injected surplus', val: 95, color: '#359EFE' }
+      ],
+    },
     consumerProfile: 'homes',
     color: 0x22c55e,
   },
@@ -1046,6 +1073,23 @@ const USECASES = [
       title: 'EED · EnEfG — heat reuse',
       value: 'ERF ≥10%',
       desc: 'EED recast: DC >500 kW rendicontano PUE/WUE/ERF; >1 MW valutano il riuso calore. Germania EnEfG: ERF ≥10% dai nuovi DC ≥300 kW (lug 2026), 15%/20% al 2027/28.'
+    },
+    en: {
+      name: 'Biodigester',
+      tag: 'Biogas + Heat Recovery',
+      workload: '24/7 inference + light fine-tuning',
+      desc: 'Always-on biogas CHP (~999 kWe, 24/7 baseload) + GPU heat recovery. Liquid cooling returns 45–65 °C, ideal for the 38–42 °C mesophilic digester: waste heat becomes process input.',
+      advantages: [
+        'Biogas CHP 24/7 baseload (~40% electrical η) — solves always-on better than PV alone',
+        'Liquid-cooling heat 45–65 °C → mesophilic digester 38–42 °C: direct thermal match',
+        'EED: DCs >500 kW report ERF; Germany EnEfG requires ERF ≥10% for new DCs ≥300 kW (Jul 2026)',
+        'Italy 2nd in EU for biogas: ~1,700 farm plants, ~1,400 MWe (CIB)'
+      ],
+      incentive: {
+        title: 'EED · EnEfG — heat reuse',
+        value: 'ERF ≥10%',
+        desc: 'EED recast: DCs >500 kW report PUE/WUE/ERF; >1 MW assess heat reuse. Germany EnEfG: ERF ≥10% for new DCs ≥300 kW (Jul 2026), 15%/20% by 2027/28.'
+      },
     },
     consumerProfile: 'farm',
     color: 0xFFE42B,
@@ -1073,6 +1117,23 @@ const USECASES = [
       value: '~€30k/MW·a',
       desc: 'Il Mercato dei Servizi di Dispacciamento remunera i carichi flessibili (aste UVAM, corrispettivo fino a ~€30.000/MW-anno). Volta è grid-aware by design: partecipa senza modifiche hardware.'
     },
+    en: {
+      name: 'Telco Edge',
+      tag: 'Hotel · Supermarket · Campus',
+      workload: 'Cloud gaming · CV · voice AI',
+      desc: 'Sites with contracted power, a technical room and fibre: telco edge for single-digit-ms latency; hotels/retail/campus where cooling and rooftop PV coexist with compute throttling at peaks.',
+      advantages: [
+        'Single-digit-ms edge latency vs 20–50 ms to a centralised hyperscaler',
+        'Fibre and backhaul already in place — zero connectivity CapEx, no new grid connection',
+        'Existing technical room: no new building permits',
+        'Flexible load on Terna UVAM/MSD: up to ~€30,000/MW-year (UVAM auctions)'
+      ],
+      incentive: {
+        title: 'Terna · UVAM / MSD',
+        value: '~€30k/MW·y',
+        desc: 'The ancillary-services market pays flexible loads (UVAM auctions, up to ~€30,000/MW-year). Volta is grid-aware by design: it participates with no hardware changes.'
+      },
+    },
     consumerProfile: 'telco',
     color: 0x359EFE,
   },
@@ -1099,6 +1160,23 @@ const USECASES = [
       value: '€200 mld',
       desc: '4 AI gigafactories da ~100.000 chip, operative 2027–28: capacità sovrana ma centralizzata. Volta copre la capacità distribuita a basso time-to-power, non il frontier training.'
     },
+    en: {
+      name: 'SME / Public Building',
+      tag: 'Light energy-intensive C&I',
+      workload: 'Digital twin · CV · industrial agents',
+      desc: 'SMEs with 50–200 kW available and among Europe\'s highest bills (~€0.22–0.25/kWh, ~+40% vs Spain). Double value: monetise electrical headroom and get energy optimisation as a service.',
+      advantages: [
+        'Italian C&I bill ~€0.22–0.25/kWh vs EU avg €0.184/kWh (Eurostat H2-2025): ~€0.07/kWh upside',
+        'Data sovereignty: in-house inference, RAG over documents, no third-party cloud',
+        'Public procurement aligned with InvestAI €200bn / EuroHPC',
+        'Demand signal: Anthropic opens Milan (May 2026), 6th European office'
+      ],
+      incentive: {
+        title: 'InvestAI · EuroHPC',
+        value: '€200bn',
+        desc: '4 AI gigafactories of ~100,000 chips, live 2027–28: sovereign but centralised capacity. Volta covers distributed, low-time-to-power capacity — not frontier training.'
+      },
+    },
     consumerProfile: 'office',
     color: 0xFFE42B,
   }
@@ -1108,11 +1186,154 @@ const USECASES = [
    SCENARIOS — dal foglio "Scenari" del modello
    ──────────────────────────────────────────────────────────────────── */
 const SCENARIOS = [
-  { id: 'bear',      label: 'Bear · commodity',    price: 2.0, util: 0.60, pillClass: 'v-pill-red',    desc: 'GPU commodity vs neocloud. IRR negativo.' },
-  { id: 'base',      label: 'Base · €3 · 72%',     price: 3.0, util: 0.72, pillClass: 'v-pill-neutral',desc: 'Caso base: 67% EBITDA margin, payback 3,4 anni.' },
-  { id: 'bull',      label: 'Bull · edge premium', price: 4.5, util: 0.80, pillClass: 'v-pill-yellow', desc: 'Edge inference latency-sensitive, contratti firmati.' },
-  { id: 'sovereign', label: 'Sovereign · premium', price: 6.0, util: 0.78, pillClass: 'v-pill-green',  desc: 'Sovranità + difesa + sanità. IRR >70%.' }
+  { id: 'bear',      label: 'Bear · commodity',    price: 2.0, util: 0.60, pillClass: 'v-pill-red',    desc: 'GPU commodity vs neocloud. IRR negativo.',            en: { label: 'Bear · commodity',    desc: 'Commodity GPU vs neoclouds. Negative IRR.' } },
+  { id: 'base',      label: 'Base · €3 · 72%',     price: 3.0, util: 0.72, pillClass: 'v-pill-neutral',desc: 'Caso base: 67% EBITDA margin, payback 3,4 anni.',     en: { label: 'Base · €3 · 72%',     desc: 'Base case: 67% EBITDA margin, 3.4-yr payback.' } },
+  { id: 'bull',      label: 'Bull · edge premium', price: 4.5, util: 0.80, pillClass: 'v-pill-yellow', desc: 'Edge inference latency-sensitive, contratti firmati.', en: { label: 'Bull · edge premium', desc: 'Latency-sensitive edge inference, signed offtake.' } },
+  { id: 'sovereign', label: 'Sovereign · premium', price: 6.0, util: 0.78, pillClass: 'v-pill-green',  desc: 'Sovranità + difesa + sanità. IRR >70%.',              en: { label: 'Sovereign · premium', desc: 'Sovereignty + defence + healthcare. IRR >70%.' } }
 ];
+
+/* ────────────────────────────────────────────────────────────────────
+   I18N — Italiano / English
+   ──────────────────────────────────────────────────────────────────── */
+const I18N = {
+  it: {
+    'tab.all': 'Tutti', 'tab.network': 'Rete', 'tab.energy': 'Energia', 'tab.compute': 'Compute', 'tab.economics': 'Economics',
+    'model.kicker': 'Modello', 'model.title': 'Use Case', 'model.count': '4 siti',
+    'scen.title': 'Scenari Unit Economics',
+    'scen.sub': 'Preset dal modello (8 GPU, CapEx €340k). Modifica i parametri per simulare.',
+    'params.title': 'Parametri',
+    'param.price': 'Prezzo', 'param.util': 'Utilizzo vendibile', 'param.util.mid': 'frontiera 65–70%',
+    'param.energy': 'Energia blended', 'param.energy.lo': 'FV puro', 'param.energy.mid': 'mix', 'param.energy.hi': 'rete C&I IT',
+    'param.fleet': 'Fleet', 'param.fleet.lo': '1 pilota', 'param.fleet.mid': 'scale-up', 'param.fleet.hi': 'fleet 200',
+    'frontier.title': 'Frontiera dell\'investibilità',
+    'frontier.body': 'Per stare sotto la <span class="text-volta-yellow font-semibold">vita GPU (3 anni)</span>: ≥€3,5/GPU-h con utilizzo ≥65% oppure ≥€3 con utilizzo ≥75%.',
+    'live.pernodo': 'Live · per nodo', 'live.stato': 'Stato fleet',
+    'kpi.revenue': 'Ricavi annui', 'kpi.margin': 'margine',
+    'frontier.short': 'Frontiera', 'frontier.px': 'Prezzo × Utilizzo',
+    'frontier.commodity': 'commodity', 'frontier.edge': 'edge', 'frontier.sovereign': 'sovereign',
+    'live.now': 'Live · ora corrente', 'live.solar': 'Solare prodotto', 'live.battery': 'Batteria stoccata',
+    'live.load': 'Consumi case + biz', 'live.compute': 'Compute venduto', 'live.grid': 'Rete net (import / export)',
+    'live.computenow': 'Compute now', 'live.co2': 'CO₂ evitata', 'live.dayrev': 'Ricavi cumulati · giornata',
+    'time.label': 'Tempo', 'speed.label': 'Velocità',
+    'sd.pv': 'FV picco', 'sd.bess': 'Batteria', 'sd.nodes': 'Nodi GPU', 'sd.workload': 'Workload',
+    'sd.cerComp': 'Composizione quartiere-CER', 'sd.valueStack': 'Stack di valore · €/MWh',
+    'sd.cerNote': 'Il compute Volta sposta i kWh dal valore basso del RID al valore alto dell\'energia condivisa incentivata + autoconsumo.',
+    'sd.advantages': 'Vantaggio strutturale',
+    'tag.prosumer': 'prosumer', 'tag.consumer': 'consumer',
+    'tag.prosumerFV': 'Prosumer · FV', 'tag.consumerLabel': 'Consumer', 'tag.prosumerVolta': 'Prosumer + Volta',
+    'intro.kicker': 'Compute · Digital Twin',
+    'intro.head': 'Energia distribuita.<br><span class="text-volta-yellow">Compute sovrano.</span>',
+    'intro.body': 'Esplora il modello Volta come un sistema vivo: 4 use case behind-the-meter, flussi di energia e capacità GPU che si attivano in tempo reale, parametri di unit economics modificabili — esattamente come nel white paper.',
+    'intro.enter': 'Entra nel digital twin', 'intro.skip': 'Salta intro',
+    'intro.stat1': 'Consumo data center globale 2030 · IEA',
+    'intro.stat2': 'Capacità data center 82→219 GW 2025-30 · McKinsey',
+    'intro.stat3': 'D.M. 414/2023 CER · fondo perduto fino al 40%',
+    'unit.years': 'anni', 'unit.perYear': '/anno',
+    'day.day': 'Giorno · estate', 'day.night': 'Notte · estate',
+    'st.excellent': 'eccellente', 'st.healthy': 'sano', 'st.borderline': 'al limite', 'st.kill': 'non investibile',
+    'pb.sub': 'vs vita GPU 3 anni',
+    'toast.themeLight': 'Tema chiaro', 'toast.themeDark': 'Tema scuro',
+    'toast.pitchOn': 'Pitch mode · auto-orbit', 'toast.pitchOff': 'Pitch mode off',
+    'toast.reset': 'Reset', 'toast.help': 'Click un sito · slider per parametri · spazio = play/pausa',
+    'toast.volta': 'Volta Compute · dove va la capacità GPU', 'toast.scenario': 'Scenario',
+  },
+  en: {
+    'tab.all': 'All', 'tab.network': 'Grid', 'tab.energy': 'Energy', 'tab.compute': 'Compute', 'tab.economics': 'Economics',
+    'model.kicker': 'Model', 'model.title': 'Use Case', 'model.count': '4 sites',
+    'scen.title': 'Unit Economics scenarios',
+    'scen.sub': 'Presets from the model (8 GPU, €340k CapEx). Tweak the parameters to simulate.',
+    'params.title': 'Parameters',
+    'param.price': 'Price', 'param.util': 'Sellable utilisation', 'param.util.mid': 'frontier 65–70%',
+    'param.energy': 'Blended energy', 'param.energy.lo': 'PV only', 'param.energy.mid': 'mix', 'param.energy.hi': 'IT C&I grid',
+    'param.fleet': 'Fleet', 'param.fleet.lo': '1 pilot', 'param.fleet.mid': 'scale-up', 'param.fleet.hi': 'fleet 200',
+    'frontier.title': 'Investability frontier',
+    'frontier.body': 'To stay under the <span class="text-volta-yellow font-semibold">GPU life (3 years)</span>: ≥€3.5/GPU-h at ≥65% utilisation, or ≥€3 at ≥75%.',
+    'live.pernodo': 'Live · per node', 'live.stato': 'Fleet status',
+    'kpi.revenue': 'Revenue / year', 'kpi.margin': 'margin',
+    'frontier.short': 'Frontier', 'frontier.px': 'Price × Utilisation',
+    'frontier.commodity': 'commodity', 'frontier.edge': 'edge', 'frontier.sovereign': 'sovereign',
+    'live.now': 'Live · current hour', 'live.solar': 'Solar produced', 'live.battery': 'Battery stored',
+    'live.load': 'Homes + biz load', 'live.compute': 'Compute sold', 'live.grid': 'Grid net (import / export)',
+    'live.computenow': 'Compute now', 'live.co2': 'CO₂ avoided', 'live.dayrev': 'Cumulative revenue · day',
+    'time.label': 'Time', 'speed.label': 'Speed',
+    'sd.pv': 'PV peak', 'sd.bess': 'Battery', 'sd.nodes': 'GPU nodes', 'sd.workload': 'Workload',
+    'sd.cerComp': 'REC neighbourhood mix', 'sd.valueStack': 'Value stack · €/MWh',
+    'sd.cerNote': 'The Volta compute shifts kWh from the low value of grid sale to the high value of incentivised shared energy + self-consumption.',
+    'sd.advantages': 'Structural advantage',
+    'tag.prosumer': 'prosumer', 'tag.consumer': 'consumer',
+    'tag.prosumerFV': 'Prosumer · PV', 'tag.consumerLabel': 'Consumer', 'tag.prosumerVolta': 'Prosumer + Volta',
+    'intro.kicker': 'Compute · Digital Twin',
+    'intro.head': 'Distributed energy.<br><span class="text-volta-yellow">Sovereign compute.</span>',
+    'intro.body': 'Explore the Volta model as a living system: 4 behind-the-meter use cases, energy and GPU flows that come alive in real time, editable unit-economics parameters — exactly as in the white paper.',
+    'intro.enter': 'Enter the digital twin', 'intro.skip': 'Skip intro',
+    'intro.stat1': 'Global data-center demand 2030 · IEA',
+    'intro.stat2': 'Data-center capacity 82→219 GW 2025-30 · McKinsey',
+    'intro.stat3': 'Decree 414/2023 REC · grant up to 40%',
+    'unit.years': 'years', 'unit.perYear': '/yr',
+    'day.day': 'Day · summer', 'day.night': 'Night · summer',
+    'st.excellent': 'excellent', 'st.healthy': 'healthy', 'st.borderline': 'borderline', 'st.kill': 'not investable',
+    'pb.sub': 'vs 3-yr GPU life',
+    'toast.themeLight': 'Light theme', 'toast.themeDark': 'Dark theme',
+    'toast.pitchOn': 'Pitch mode · auto-orbit', 'toast.pitchOff': 'Pitch mode off',
+    'toast.reset': 'Reset', 'toast.help': 'Click a site · sliders for parameters · space = play/pause',
+    'toast.volta': 'Volta Compute · where the GPU capacity goes', 'toast.scenario': 'Scenario',
+  }
+};
+function t(key) {
+  const L = I18N[state.lang] || I18N.it;
+  return (key in L) ? L[key] : (I18N.it[key] !== undefined ? I18N.it[key] : key);
+}
+// localized use-case / scenario field
+function L(obj, field) {
+  if (state.lang === 'en' && obj.en && obj.en[field] !== undefined) return obj.en[field];
+  return obj[field];
+}
+
+function applyLang(lang) {
+  state.lang = lang;
+  document.documentElement.lang = lang;
+  // static text nodes
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+  // lang toggle active state
+  document.querySelectorAll('.lang-tab').forEach(b => {
+    b.classList.toggle('v-pill-yellow', b.dataset.lang === lang);
+    b.classList.toggle('v-pill-neutral', b.dataset.lang !== lang);
+  });
+  // re-render dynamic content
+  if (typeof renderUsecaseList === 'function') renderUsecaseList();
+  if (typeof renderScenarioButtons === 'function') renderScenarioButtons();
+  if (typeof refreshSliderLabels === 'function') refreshSliderLabels();
+  if (typeof recomputeKPIs === 'function') recomputeKPIs();
+  if (typeof updateTimeDisplay === 'function') updateTimeDisplay();
+  // compute client labels
+  if (typeof clientLabels !== 'undefined') {
+    COMPUTE_CLIENTS.forEach(c => {
+      const el = clientLabels[c.id];
+      if (el) {
+        const hex = '#' + c.color.toString(16).padStart(6, '0');
+        el.innerHTML = `<span class="dot" style="background:${hex}; box-shadow:0 0 8px ${hex};"></span>${lang === 'en' ? c.label_en : c.label}`;
+      }
+    });
+  }
+  // CER house tags
+  if (typeof cerHouseTags !== 'undefined') {
+    cerHouseTags.forEach(({ el, house }) => {
+      el.textContent = house.userData.hasCompute ? t('tag.prosumerVolta') : (house.userData.isProsumer ? t('tag.prosumerFV') : t('tag.consumerLabel'));
+    });
+  }
+  // scene site-name labels + economics labels
+  if (typeof labels !== 'undefined') {
+    USECASES.forEach(uc => {
+      const el = labels[uc.id]; if (el) { const nm = el.querySelector('.sl-name'); if (nm) nm.textContent = L(uc, 'name'); }
+      const ec = econLabels[uc.id]; if (ec) { const sub = ec.querySelector('.el-sub'); if (sub) sub.textContent = L(uc, 'name'); }
+    });
+  }
+  // re-open detail card in the new language if a site is selected
+  if (state.selectedSite && typeof selectSite === 'function') selectSite(state.selectedSite);
+  // refresh caption
+  if (typeof applyView === 'function') applyView();
+}
 
 /* ────────────────────────────────────────────────────────────────────
    ECONOMICS  — formule identiche al modello Excel allegato
@@ -1197,10 +1418,12 @@ const state = {
   speed: 300,       // 5 minutes per second
 
   // view
-  view: 'network',  // network|energy|compute|economics
+  view: 'all',      // all|network|energy|compute|economics
   selectedSite: null,
   pitchMode: false,
   theme: 'dark',    // 'dark' | 'light'
+  lang: 'it',       // 'it' | 'en'
+  viewBloomBase: 0.85,
 };
 
 /* ────────────────────────────────────────────────────────────────────
@@ -1924,10 +2147,10 @@ registerThemedMaterials();
    floating above the scene. GPU streams flow up here in Compute view.
    ──────────────────────────────────────────────────────────────────── */
 const COMPUTE_CLIENTS = [
-  { id: 'inference', label: 'Inference enterprise', sub: 'RAG · documenti privati', color: 0x359EFE, angle: -0.6, radius: 46, y: 30 },
-  { id: 'gaming',    label: 'Cloud gaming · rendering', sub: 'streaming a bassa latenza', color: 0x818CF8, angle: 0.7, radius: 50, y: 35 },
-  { id: 'agents',    label: 'Agenti · computer vision', sub: 'voice AI · edge industriale', color: 0x22d3ee, angle: 2.0, radius: 44, y: 27 },
-  { id: 'sovereign', label: 'Sovereign · PA · difesa', sub: 'dati locali, sovrani', color: 0xFFE42B, angle: 3.5, radius: 52, y: 38 },
+  { id: 'inference', label: 'Inference enterprise', label_en: 'Enterprise inference', color: 0x359EFE, angle: -0.6, radius: 46, y: 30 },
+  { id: 'gaming',    label: 'Cloud gaming · rendering', label_en: 'Cloud gaming · rendering', color: 0x818CF8, angle: 0.7, radius: 50, y: 35 },
+  { id: 'agents',    label: 'Agenti · computer vision', label_en: 'Agents · computer vision', color: 0x22d3ee, angle: 2.0, radius: 44, y: 27 },
+  { id: 'sovereign', label: 'Sovereign · PA · difesa', label_en: 'Sovereign · gov · defence', color: 0xFFE42B, angle: 3.5, radius: 52, y: 38 },
 ];
 const clientNodes = new THREE.Group();
 scene.add(clientNodes);
@@ -2404,11 +2627,11 @@ function spawnSiteParticles(uc, g, st, batteryFlow, gridFlow, dt) {
   }
 
   // Solar / battery → Volta node (powering the compute)
-  if (st.gpuKW > 0.5) {
+  if (st.gpuKW > 0.5 && eMix > 0) {
     const fromBat = batteryFlow < -0.3;
     const src = fromBat ? batPos : solarKW > 0.5 ? solarPos : pylonPos;
     const col = fromBat ? COLOR.green : solarKW > 0.5 ? COLOR.yellow : COLOR.blue;
-    const n = clamp(Math.round(st.gpuKW * dt * 1.3 * (0.4 + Math.max(eMix, cMix) * 0.6)), 0, 6);
+    const n = clamp(Math.round(st.gpuKW * dt * 1.3 * eMix), 0, 6);
     for (let i = 0; i < n; i++) {
       flow.spawn({ curve: curveBetween(src, gpuPos, 1.8), color: col, life: 1.6 + Math.random()*0.3, size: 7 });
     }
@@ -2416,8 +2639,8 @@ function spawnSiteParticles(uc, g, st, batteryFlow, gridFlow, dt) {
 
   // Volta node → COMPUTE DESTINATIONS (where the compute goes): client nodes in the sky
   const computeIntensity = state.util * (st.gpuKW || 0);
-  if (computeIntensity > 0.5 && clientNodes.children.length) {
-    const n = clamp(Math.round(computeIntensity * dt * 0.55 * (0.3 + cMix * 0.85)), 0, 7);
+  if (computeIntensity > 0.5 && cMix > 0 && clientNodes.children.length) {
+    const n = clamp(Math.round(computeIntensity * dt * 0.55 * cMix), 0, 7);
     for (let i = 0; i < n; i++) {
       const target = clientNodes.children[Math.floor(Math.random() * clientNodes.children.length)];
       const tp = target.userData.worldPos;
@@ -2438,12 +2661,12 @@ function spawnSiteParticles(uc, g, st, batteryFlow, gridFlow, dt) {
       const c = consumers[Math.floor((performance.now() * 0.017 + i) % consumers.length)];
       if (p && c) flow.spawn({ curve: curveBetween(wpos(p, 2.1), wpos(c, 1.2), 1.6), color: COLOR.green, life: 1.6, size: 6 });
     }
-    // prosumer-with-compute → its mini-node → client destination
+    // prosumer-with-compute → its mini-node (energy) → client destination (compute)
     prosumers.filter(h => h.userData.hasCompute).forEach(h => {
-      if (Math.random() < state.util * 0.5 * (0.4 + cMix * 0.7)) {
+      if (Math.random() < state.util * 0.5 * Math.max(eMix, cMix)) {
         const node = new THREE.Vector3(h.position.x + 1.35, 1.2, h.position.z + 0.2).applyMatrix4(g.matrixWorld);
-        flow.spawn({ curve: curveBetween(wpos(h, 2.0), node, 1.0), color: COLOR.yellow, life: 1.3, size: 6 });
-        if (clientNodes.children.length) {
+        if (eMix > 0) flow.spawn({ curve: curveBetween(wpos(h, 2.0), node, 1.0), color: COLOR.yellow, life: 1.3, size: 6 });
+        if (cMix > 0 && clientNodes.children.length) {
           const target = clientNodes.children[Math.floor(Math.random() * clientNodes.children.length)];
           flow.spawn({ curve: curveBetween(node, target.userData.worldPos, 8 + Math.random()*4), color: hexArr(target.userData.color), life: 2.4, size: 6.5 });
         }
@@ -2451,10 +2674,10 @@ function spawnSiteParticles(uc, g, st, batteryFlow, gridFlow, dt) {
     });
   }
 
-  // BIO heat recovery: Volta node → digester (amber) — compute byproduct
-  if (uc.id === 'bio' && st.gpuKW > 1 && g.userData.dome) {
+  // BIO heat recovery: Volta node → digester (amber) — shown in energy & compute
+  if (uc.id === 'bio' && st.gpuKW > 1 && g.userData.dome && Math.max(eMix, cMix) > 0) {
     const dome = new THREE.Vector3().copy(g.userData.dome.position).add(new THREE.Vector3(0, 2.5, 0)).applyMatrix4(g.matrixWorld);
-    const n = clamp(Math.round(st.gpuKW * dt * 0.8 * (0.4 + cMix * 0.6)), 0, 4);
+    const n = clamp(Math.round(st.gpuKW * dt * 0.8 * Math.max(eMix, cMix)), 0, 4);
     for (let i = 0; i < n; i++) {
       flow.spawn({ curve: curveBetween(gpuPos, dome, 1.5), color: COLOR.amber, life: 1.4 + Math.random()*0.4, size: 7 });
     }
@@ -2484,39 +2707,48 @@ function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
 /* Use case list */
 const usecaseList = document.getElementById('usecase-list');
-USECASES.forEach(uc => {
-  const el = document.createElement('button');
-  el.className = 'uc-chip';
-  el.dataset.id = uc.id;
-  el.innerHTML = `
-    <div class="icon" style="background: rgba(${hexToRgb(uc.iconColor)}, 0.18);">
-      ${iconSVG(uc.icon, uc.iconColor)}
-    </div>
-    <div class="flex-1 min-w-0">
-      <div class="text-sm font-semibold leading-tight truncate">${uc.name}</div>
-      <div class="text-[11px] text-volta-white/55 leading-tight mt-0.5">${uc.tag}</div>
-    </div>
-    <div class="text-[10px] text-volta-white/40 font-mono whitespace-nowrap">${uc.nodes}×8</div>
-  `;
-  el.addEventListener('click', () => selectSite(uc.id));
-  usecaseList.appendChild(el);
-});
+function renderUsecaseList() {
+  usecaseList.innerHTML = '';
+  USECASES.forEach(uc => {
+    const el = document.createElement('button');
+    el.className = 'uc-chip';
+    el.dataset.id = uc.id;
+    el.classList.toggle('active', state.selectedSite === uc.id);
+    el.innerHTML = `
+      <div class="icon" style="background: rgba(${hexToRgb(uc.iconColor)}, 0.18);">
+        ${iconSVG(uc.icon, uc.iconColor)}
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-sm font-semibold leading-tight truncate">${L(uc, 'name')}</div>
+        <div class="text-[11px] text-volta-white/55 leading-tight mt-0.5">${L(uc, 'tag')}</div>
+      </div>
+      <div class="text-[10px] text-volta-white/40 font-mono whitespace-nowrap">${uc.nodes}×8</div>
+    `;
+    el.addEventListener('click', () => selectSite(uc.id));
+    usecaseList.appendChild(el);
+  });
+}
+renderUsecaseList();
 
 /* Scenario buttons */
 const scenarioWrap = document.getElementById('scenario-buttons');
-SCENARIOS.forEach(s => {
-  const el = document.createElement('button');
-  el.className = 'w-full flex items-center justify-between px-3 py-2 rounded-xl border border-volta-white/10 bg-volta-white/[0.03] hover:bg-volta-white/[0.07] transition';
-  el.innerHTML = `
-    <div class="text-left">
-      <div class="text-[12px] font-semibold">${s.label}</div>
-      <div class="text-[10px] text-volta-white/50 mt-0.5">${s.desc}</div>
-    </div>
-    <span class="v-pill ${s.pillClass}">€${s.price}</span>
-  `;
-  el.addEventListener('click', () => applyScenario(s));
-  scenarioWrap.appendChild(el);
-});
+function renderScenarioButtons() {
+  scenarioWrap.innerHTML = '';
+  SCENARIOS.forEach(s => {
+    const el = document.createElement('button');
+    el.className = 'w-full flex items-center justify-between px-3 py-2 rounded-xl border border-volta-white/10 bg-volta-white/[0.03] hover:bg-volta-white/[0.07] transition';
+    el.innerHTML = `
+      <div class="text-left">
+        <div class="text-[12px] font-semibold">${L(s, 'label')}</div>
+        <div class="text-[10px] text-volta-white/50 mt-0.5">${L(s, 'desc')}</div>
+      </div>
+      <span class="v-pill ${s.pillClass}">€${s.price}</span>
+    `;
+    el.addEventListener('click', () => applyScenario(s));
+    scenarioWrap.appendChild(el);
+  });
+}
+renderScenarioButtons();
 
 function applyScenario(s) {
   state.price = s.price;
@@ -2525,7 +2757,7 @@ function applyScenario(s) {
   document.getElementById('slider-util').value = String(Math.round(s.util * 100));
   refreshSliderLabels();
   recomputeKPIs();
-  toast(`Scenario · ${s.label}`);
+  toast(`${t('toast.scenario')} · ${L(s, 'label')}`);
 }
 
 /* Sliders */
@@ -2557,7 +2789,8 @@ function refreshSliderLabels() {
   document.getElementById('val-fleet').textContent = state.fleet;
   // GPU count
   const gpuCount = state.fleet * 8;
-  document.querySelector('#val-fleet').nextElementSibling.textContent = `nodi · ${gpuCount} GPU`;
+  const fu = document.getElementById('fleet-unit');
+  if (fu) fu.textContent = (state.lang === 'en' ? 'nodes · ' : 'nodi · ') + `${gpuCount} GPU`;
 }
 
 /* Play/pause */
@@ -2587,7 +2820,7 @@ document.getElementById('btn-pitch').addEventListener('click', () => {
   state.pitchMode = !state.pitchMode;
   controls.autoRotate = state.pitchMode;
   document.getElementById('pitch-mode-banner').classList.toggle('on', state.pitchMode);
-  toast(state.pitchMode ? 'Pitch mode · auto-orbit' : 'Pitch mode off');
+  toast(state.pitchMode ? t('toast.pitchOn') : t('toast.pitchOff'));
 });
 
 /* Reset */
@@ -2602,19 +2835,19 @@ document.getElementById('btn-reset').addEventListener('click', () => {
   selectSite(null);
   controls.target.set(0, 4, 0);
   controls.update();
-  toast('Reset');
+  toast(t('toast.reset'));
 });
 
 /* Help */
 document.getElementById('btn-help').addEventListener('click', () => {
-  toast('Click un sito · slider per parametri · spazio = play/pause');
+  toast(t('toast.help'));
 });
 
 /* View tabs */
-const TAB_ACCENT = { network: 'v-pill-yellow', energy: 'v-pill-green', compute: 'v-pill-blue', economics: 'v-pill-yellow' };
+const TAB_ACCENT = { all: 'v-pill-yellow', network: 'v-pill-red', energy: 'v-pill-green', compute: 'v-pill-blue', economics: 'v-pill-yellow' };
 function setActiveTab(view) {
   document.querySelectorAll('.view-tab').forEach(b => {
-    b.classList.remove('v-pill-yellow', 'v-pill-green', 'v-pill-blue', 'v-pill-neutral');
+    b.classList.remove('v-pill-yellow', 'v-pill-green', 'v-pill-blue', 'v-pill-red', 'v-pill-neutral');
     b.classList.add(b.dataset.view === view ? (TAB_ACCENT[b.dataset.view] || 'v-pill-yellow') : 'v-pill-neutral');
   });
 }
@@ -2625,41 +2858,48 @@ document.querySelectorAll('.view-tab').forEach(btn => {
     applyView();
   });
 });
-setActiveTab('network');
+setActiveTab('all');
 
-/* View mixing — each tab re-weights what the scene emphasises and what flows */
+/* View FILTER — each tab shows ONLY its category of flows (0 = hidden) */
 const viewMix = { energy: 1, compute: 1, grid: 1, econ: 0 };
 const VIEW_CONFIG = {
-  network:   { energy: 1.0, compute: 1.0, grid: 1.3, econ: 0, bloom: 0.72,
-    accent: '#FFE42B', caption: 'Rete · flussi vivi di energia e compute tra siti, batterie e rete elettrica' },
-  energy:    { energy: 1.8, compute: 0.22, grid: 1.4, econ: 0, bloom: 0.98,
-    accent: '#22c55e', caption: 'Energia · FV prodotto, batteria stoccata, consumi e scambio con la rete' },
-  compute:   { energy: 0.28, compute: 2.0, grid: 0.45, econ: 0, bloom: 1.1,
-    accent: '#359EFE', caption: 'Compute · dove va la capacità GPU → inference, RAG, cloud gaming, agenti' },
-  economics: { energy: 0.5, compute: 0.6, grid: 0.5, econ: 1, bloom: 0.55,
-    accent: '#FFE42B', caption: 'Economics · ricavi €/anno per sito e marginalità del fleet' },
+  all:       { energy: 1.0, compute: 1.0, grid: 1.2, econ: 0, bloom: 0.85, accent: '#FFE42B',
+    caption: { it: 'Tutti · l\'intero sistema: energia, rete elettrica e compute insieme',
+               en: 'All · the whole system: energy, electrical grid and compute together' } },
+  network:   { energy: 0.0, compute: 0.0, grid: 1.6, econ: 0, bloom: 0.7, accent: '#FB3615',
+    caption: { it: 'Rete · solo lo scambio con la rete elettrica — import e export',
+               en: 'Grid · only the exchange with the electrical grid — import and export' } },
+  energy:    { energy: 1.7, compute: 0.0, grid: 0.0, econ: 0, bloom: 0.95, accent: '#22c55e',
+    caption: { it: 'Energia · solo i flussi energetici: FV, batteria e consumi on-site',
+               en: 'Energy · only the energy flows: PV, battery and on-site consumption' } },
+  compute:   { energy: 0.0, compute: 2.0, grid: 0.0, econ: 0, bloom: 1.05, accent: '#359EFE',
+    caption: { it: 'Compute · solo il compute: dove va la capacità GPU venduta',
+               en: 'Compute · only compute: where the sold GPU capacity goes' } },
+  economics: { energy: 0.0, compute: 0.0, grid: 0.0, econ: 1, bloom: 0.5, accent: '#FFE42B',
+    caption: { it: 'Economics · solo i ricavi €/anno per sito e la marginalità del fleet',
+               en: 'Economics · only revenue €/year per site and fleet margin' } },
 };
 
 function applyView() {
-  const bm = state.theme === 'light' ? 0.28 : 1.0;
-  const cfg = VIEW_CONFIG[state.view] || VIEW_CONFIG.network;
+  const cfg = VIEW_CONFIG[state.view] || VIEW_CONFIG.all;
   viewMix.energy = cfg.energy;
   viewMix.compute = cfg.compute;
   viewMix.grid = cfg.grid;
   viewMix.econ = cfg.econ;
-  bloomPass.strength = cfg.bloom * bm;
+  const bm = state.theme === 'light' ? 0.28 : 1.0;
+  state.viewBloomBase = cfg.bloom * bm;   // distance scaling applied per-frame in tick
 
   // caption banner
   const cap = document.getElementById('view-caption');
   if (cap) {
-    cap.querySelector('.vc-text').textContent = cfg.caption;
+    cap.querySelector('.vc-text').textContent = cfg.caption[state.lang] || cfg.caption.it;
     cap.style.setProperty('--accent', cfg.accent);
     cap.classList.add('show');
     clearTimeout(window.__capT);
     window.__capT = setTimeout(() => cap.classList.remove('show'), 4200);
   }
 
-  // client/destination nodes are prominent in network + compute views
+  // client/destination nodes only in compute + all
   if (typeof clientNodes !== 'undefined' && clientNodes) {
     clientNodes.visible = viewMix.compute > 0.5;
   }
@@ -2667,6 +2907,13 @@ function applyView() {
   if (typeof econLabels !== 'undefined') {
     Object.values(econLabels).forEach(el => el.classList.toggle('show', viewMix.econ > 0));
   }
+}
+
+/* Soften bloom as the camera moves in close (avoids over-bright zoom) */
+function bloomDistanceFactor() {
+  const d = camera.position.distanceTo(controls.target);
+  const t = clamp((d - 30) / (110 - 30), 0, 1); // 30→0.45, 110+→1.0
+  return 0.45 + 0.55 * t;
 }
 
 /* ────────── THEME (dark / light) ────────── */
@@ -2698,7 +2945,12 @@ function applyTheme(theme) {
 
 document.getElementById('btn-theme').addEventListener('click', () => {
   applyTheme(state.theme === 'dark' ? 'light' : 'dark');
-  toast(state.theme === 'light' ? 'Tema chiaro' : 'Tema scuro');
+  toast(state.theme === 'light' ? t('toast.themeLight') : t('toast.themeDark'));
+});
+
+/* Language toggle */
+document.querySelectorAll('.lang-tab').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
 });
 
 /* Site selection */
@@ -2715,24 +2967,25 @@ function selectSite(id) {
   const uc = USECASES.find(u => u.id === id);
   if (!uc) return;
   // populate detail card
-  document.getElementById('sd-name').textContent = uc.name;
-  document.getElementById('sd-tag').textContent  = uc.tag;
-  document.getElementById('sd-desc').textContent = uc.desc;
+  const inc = L(uc, 'incentive');
+  document.getElementById('sd-name').textContent = L(uc, 'name');
+  document.getElementById('sd-tag').textContent  = L(uc, 'tag');
+  document.getElementById('sd-desc').textContent = L(uc, 'desc');
   document.getElementById('sd-pv').textContent   = `${uc.pv_kwp} kWp`;
   document.getElementById('sd-bess').textContent = `${uc.bess_kwh} kWh`;
   document.getElementById('sd-nodes').textContent= `${uc.nodes} × 8 GPU`;
-  document.getElementById('sd-workload').textContent = uc.workload;
+  document.getElementById('sd-workload').textContent = L(uc, 'workload');
   const advList = document.getElementById('sd-advantages');
   advList.innerHTML = '';
-  uc.advantages.forEach(a => {
+  L(uc, 'advantages').forEach(a => {
     const li = document.createElement('li');
     li.className = 'flex items-start gap-2';
     li.innerHTML = `<span class="text-volta-yellow mt-1">▸</span><span>${a}</span>`;
     advList.appendChild(li);
   });
-  document.getElementById('sd-incentive-title').textContent = uc.incentive.title;
-  document.getElementById('sd-incentive-value').textContent = uc.incentive.value;
-  document.getElementById('sd-incentive-desc').textContent  = uc.incentive.desc;
+  document.getElementById('sd-incentive-title').textContent = inc.title;
+  document.getElementById('sd-incentive-value').textContent = inc.value;
+  document.getElementById('sd-incentive-desc').textContent  = inc.desc;
   document.getElementById('sd-icon').innerHTML = iconSVG(uc.icon, uc.iconColor, 18);
   document.getElementById('sd-icon').style.background = `rgba(${hexToRgb(uc.iconColor)}, 0.18)`;
 
@@ -2745,8 +2998,9 @@ function selectSite(id) {
     document.getElementById('sd-cer-compute').textContent  = uc.composition.withCompute;
     const stack = document.getElementById('sd-cer-stack');
     stack.innerHTML = '';
-    const maxV = Math.max(...uc.valueStack.map(s => s.val));
-    uc.valueStack.forEach(s => {
+    const vstack = L(uc, 'valueStack');
+    const maxV = Math.max(...vstack.map(s => s.val));
+    vstack.forEach(s => {
       const row = document.createElement('div');
       row.innerHTML = `
         <div class="flex justify-between text-[11px] mb-0.5">
@@ -2800,20 +3054,23 @@ function recomputeKPIs() {
   const fleetEbitda = ebitdaPerNode * state.fleet;
 
   document.getElementById('kpi-revenue').textContent = euroShort(fleetRev);
-  document.getElementById('kpi-revenue-sub').textContent = `${euroShort(revPerNode)}/nodo · ${state.fleet} nodi`;
+  document.getElementById('kpi-revenue-sub').textContent = state.lang === 'en'
+    ? `${euroShort(revPerNode)}/node · ${state.fleet} nodes`
+    : `${euroShort(revPerNode)}/nodo · ${state.fleet} nodi`;
 
   document.getElementById('kpi-ebitda').textContent = euroShort(fleetEbitda);
   document.getElementById('kpi-ebitda-margin').textContent = (e.ebitdaMargin * 100).toFixed(0) + '%';
 
   const pb = e.payback;
   document.getElementById('kpi-payback').textContent = isFinite(pb) && pb > 0 ? pb.toFixed(1) : '—';
-  let pbStatus, pbColor;
-  if (!isFinite(pb) || pb <= 0) { pbStatus = 'non investibile'; pbColor = 'v-pill-red'; }
-  else if (pb < 2.5)  { pbStatus = 'eccellente';      pbColor = 'v-pill-green'; }
-  else if (pb < 3)    { pbStatus = 'sano';            pbColor = 'v-pill-green'; }
-  else if (pb < 4)    { pbStatus = 'al limite';       pbColor = 'v-pill-yellow';}
-  else                { pbStatus = 'oltre vita GPU';  pbColor = 'v-pill-red';   }
-  document.getElementById('kpi-payback-sub').textContent = pbStatus;
+  const pbu = document.getElementById('kpi-payback-unit'); if (pbu) pbu.textContent = ' ' + t('unit.years');
+  let pbKey, pbColor;
+  if (!isFinite(pb) || pb <= 0) { pbKey = 'st.kill'; pbColor = 'v-pill-red'; }
+  else if (pb < 2.5)  { pbKey = 'st.excellent';  pbColor = 'v-pill-green'; }
+  else if (pb < 3)    { pbKey = 'st.healthy';    pbColor = 'v-pill-green'; }
+  else if (pb < 4)    { pbKey = 'st.borderline'; pbColor = 'v-pill-yellow';}
+  else                { pbKey = 'st.kill';       pbColor = 'v-pill-red';   }
+  document.getElementById('kpi-payback-sub').textContent = t('pb.sub');
 
   const irrPct = (e.irr * 100);
   document.getElementById('kpi-irr').textContent = isFinite(irrPct) ? `${irrPct.toFixed(0)}%` : '—';
@@ -2822,7 +3079,7 @@ function recomputeKPIs() {
   // Status pill
   const statusPill = document.getElementById('status-pill');
   statusPill.className = 'v-pill ' + pbColor;
-  statusPill.textContent = pbStatus.replace('non investibile', 'kill').replace('al limite', 'borderline').replace('oltre vita GPU', 'kill').toUpperCase();
+  statusPill.textContent = t(pbKey).toUpperCase();
 
   // Frontier bar — composite (price 1.5..7, util 40..95)
   const priceN = (state.price - 1.5) / (7 - 1.5);
@@ -2840,7 +3097,8 @@ function recomputeKPIs() {
 function euroShort(n) {
   if (!isFinite(n)) return '—';
   const a = Math.abs(n);
-  if (a >= 1e9) return `${n < 0 ? '-' : ''}€${(a/1e9).toFixed(2)} mld`;
+  const bn = state.lang === 'en' ? 'bn' : 'mld';
+  if (a >= 1e9) return `${n < 0 ? '-' : ''}€${(a/1e9).toFixed(2)} ${bn}`;
   if (a >= 1e6) return `${n < 0 ? '-' : ''}€${(a/1e6).toFixed(2)}M`;
   if (a >= 1e3) return `${n < 0 ? '-' : ''}€${(a/1e3).toFixed(0)}k`;
   return `${n < 0 ? '-' : ''}€${a.toFixed(0)}`;
@@ -2975,7 +3233,7 @@ const labels = {};
 USECASES.forEach(uc => {
   const el = document.createElement('div');
   el.className = 'scene-label';
-  el.innerHTML = `<span class="dot"></span>${uc.name}`;
+  el.innerHTML = `<span class="dot"></span><span class="sl-name">${L(uc, 'name')}</span>`;
   el.addEventListener('click', () => selectSite(uc.id));
   labelContainer.appendChild(el);
   labels[uc.id] = el;
@@ -2998,7 +3256,7 @@ const econLabels = {};
 USECASES.forEach(uc => {
   const el = document.createElement('div');
   el.className = 'econ-label';
-  el.innerHTML = `<span class="el-val">€0</span><span class="el-sub">${uc.name}</span>`;
+  el.innerHTML = `<span class="el-val">€0</span><span class="el-sub">${L(uc, 'name')}</span>`;
   labelContainer.appendChild(el);
   econLabels[uc.id] = el;
 });
@@ -3012,7 +3270,7 @@ const cerHouseTags = [];
     const type = h.userData.hasCompute ? 'compute' : (h.userData.isProsumer ? 'prosumer' : 'consumer');
     const el = document.createElement('div');
     el.className = `cer-tag ${type}`;
-    el.textContent = h.userData.hasCompute ? 'Prosumer + Volta' : (h.userData.isProsumer ? 'Prosumer · FV' : 'Consumer');
+    el.textContent = h.userData.hasCompute ? t('tag.prosumerVolta') : (h.userData.isProsumer ? t('tag.prosumerFV') : t('tag.consumerLabel'));
     labelContainer.appendChild(el);
     cerHouseTags.push({ el, house: h, site: cerSite });
   });
@@ -3046,7 +3304,7 @@ function updateLabels() {
     if (viewMix.econ > 0 && !ep.behind) {
       const e = nodeEconomics(state.price, state.util, state.energy);
       const rev = e.revenue * (nodeDistribution[idx] || 1);
-      ec.querySelector('.el-val').textContent = euroShort(rev) + '/anno';
+      ec.querySelector('.el-val').textContent = euroShort(rev) + t('unit.perYear');
       ec.style.left = `${ep.x}px`;
       ec.style.top  = `${ep.y}px`;
       ec.classList.add('show');
@@ -3115,7 +3373,7 @@ sceneEl.addEventListener('click', e => {
   selectSite(pick.siteId);
   if (pick.isVolta) {
     document.querySelector('.view-tab[data-view="compute"]').click();
-    toast('Volta Compute · dove va la capacità GPU');
+    toast(t('toast.volta'));
   }
 });
 
@@ -3140,7 +3398,7 @@ function updateTimeDisplay() {
   const hh = String(h).padStart(2, '0');
   const mm = String(Math.floor(m)).padStart(2, '0');
   document.getElementById('time-display').textContent = `${hh}:${mm}`;
-  document.getElementById('time-day').textContent = h >= 6 && h < 19 ? 'Giorno · estate' : 'Notte · estate';
+  document.getElementById('time-day').textContent = h >= 6 && h < 19 ? t('day.day') : t('day.night');
   // sun arc marker
   document.getElementById('sun-marker').style.left = `${(state.minuteOfDay / 1440) * 100}%`;
   // slider value
@@ -3244,6 +3502,9 @@ function tick(now) {
   updateLabels();
   updateLiveKPIs();
 
+  // bloom softens as the camera moves in close
+  bloomPass.strength = (state.viewBloomBase || 0.85) * bloomDistanceFactor();
+
   // Sparkline buckets — every 15 minutes
   const bucket = Math.floor(state.minuteOfDay / 15);
   if (bucket !== prevHourBucket) {
@@ -3269,6 +3530,8 @@ recomputeKPIs();
 syncPlayUI();
 drawSparkline();
 applyTheme('dark');
+applyLang('it');
+updateTimeDisplay();
 requestAnimationFrame(tick);
 
 </script>
