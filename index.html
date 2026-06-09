@@ -351,6 +351,55 @@
   }
   #pitch-mode-banner.on { opacity: 1; }
 
+  /* View caption — explains the active tab */
+  #view-caption {
+    position: absolute; top: 64px; left: 50%; transform: translateX(-50%) translateY(-6px);
+    background: var(--panel-strong-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    padding: 8px 16px 8px 12px; border-radius: 9999px;
+    border: 1px solid var(--w-10);
+    font-size: 12px; color: var(--text);
+    z-index: 26; pointer-events: none;
+    display: flex; align-items: center; gap: 9px;
+    opacity: 0; transition: opacity .35s ease, transform .35s ease;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    white-space: nowrap;
+  }
+  #view-caption.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #view-caption .vc-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent, #FFE42B); box-shadow: 0 0 10px var(--accent, #FFE42B); flex: 0 0 auto; }
+
+  /* Economics floating € label */
+  .econ-label {
+    position: absolute; transform: translate(-50%, -50%);
+    pointer-events: none; z-index: 19;
+    background: rgba(255,228,43,0.96); color: #000;
+    font-weight: 700; font-size: 12px; font-variant-numeric: tabular-nums;
+    padding: 4px 9px; border-radius: 9px;
+    box-shadow: 0 6px 18px rgba(255,228,43,0.35);
+    opacity: 0; transition: opacity .3s ease;
+    white-space: nowrap;
+  }
+  .econ-label.show { opacity: 1; }
+  .econ-label .el-sub { display:block; font-weight:600; font-size:9px; opacity:.7; margin-top:-1px; }
+
+  /* CER prosumer/consumer mini tags */
+  .cer-tag {
+    position: absolute; transform: translate(-50%, -50%);
+    pointer-events: none; z-index: 18;
+    font-size: 10px; font-weight: 600;
+    padding: 3px 7px; border-radius: 7px;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    opacity: 0; transition: opacity .3s ease;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  .cer-tag.show { opacity: 1; }
+  .cer-tag.prosumer { background: rgba(255,228,43,0.16); color: #FFE42B; border-color: rgba(255,228,43,0.45); }
+  .cer-tag.consumer { background: rgba(129,140,248,0.16); color: #a5b4fc; border-color: rgba(129,140,248,0.45); }
+  .cer-tag.compute  { background: rgba(53,158,254,0.18); color: #7cc4ff; border-color: rgba(53,158,254,0.5); }
+  body.light .cer-tag.prosumer { color: #8a6d00; }
+  body.light .cer-tag.consumer { color: #4f46e5; }
+  body.light .cer-tag.compute  { color: #1769c4; }
+
   /* Time-of-day skybar */
   .sun-arc {
     position: relative; height: 4px; background: var(--w-10); border-radius: 999px; overflow: visible;
@@ -504,6 +553,9 @@
 
   <!-- Investor pitch mode label -->
   <div id="pitch-mode-banner">PITCH MODE · AUTO-ROTATE</div>
+
+  <!-- View caption -->
+  <div id="view-caption"><span class="vc-dot"></span><span class="vc-text">Rete</span></div>
 
   <!-- ────────── TOP BAR ────────── -->
   <div id="topbar">
@@ -1380,12 +1432,40 @@ function buildBattery(width = 2.2, height = 1.6, depth = 1.4) {
    ──────────────────────────────────────────────────────────────────── */
 function buildGPURack(width = 1.6, height = 2.2, depth = 1.0) {
   const g = new THREE.Group();
+
+  // ── VOLTA COMPUTE ASSET — visually distinct, clickable hero element ──
+  // Glowing yellow pedestal halo at the base
+  const pedestal = new THREE.Mesh(
+    new THREE.RingGeometry(1.15, 1.5, 48),
+    new THREE.MeshBasicMaterial({ color: VC.yellow, transparent: true, opacity: 0.55, side: THREE.DoubleSide, depthWrite: false })
+  );
+  pedestal.rotation.x = -Math.PI / 2;
+  pedestal.position.y = 0.03;
+  g.add(pedestal);
+  g.userData.pedestal = pedestal;
+
+  // raised platform disc
+  const platform = new THREE.Mesh(
+    new THREE.CylinderGeometry(1.15, 1.2, 0.16, 32),
+    new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.5, metalness: 0.6 })
+  );
+  platform.position.y = 0.08;
+  g.add(platform);
+
   const shell = new THREE.Mesh(
     new THREE.BoxGeometry(width, height, depth),
-    new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.55, metalness: 0.55 })
+    new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.5, metalness: 0.6, emissive: VC.yellow, emissiveIntensity: 0.04 })
   );
-  shell.position.y = height / 2;
+  shell.position.y = height / 2 + 0.16;
   g.add(shell);
+
+  // yellow edge frame strips (Volta accent)
+  const frameMat = new THREE.MeshBasicMaterial({ color: VC.yellow, transparent: true, opacity: 0.85 });
+  [[-width/2, depth/2],[width/2, depth/2]].forEach(([x, z]) => {
+    const edge = new THREE.Mesh(new THREE.BoxGeometry(0.045, height, 0.045), frameMat);
+    edge.position.set(x, height/2 + 0.16, z);
+    g.add(edge);
+  });
 
   // 8 GPU slot LED indicators on front
   const slots = 8;
@@ -1394,7 +1474,7 @@ function buildGPURack(width = 1.6, height = 2.2, depth = 1.0) {
   const slotLEDs = [];
   for (let i = 0; i < slots; i++) {
     const m = new THREE.Mesh(slotGeo, new THREE.MeshBasicMaterial({ color: VC.blue, transparent: true, opacity: 0.7 }));
-    m.position.set(0, slotH * (slots - i) + 0.18, depth / 2 + 0.005);
+    m.position.set(0, slotH * (slots - i) + 0.18 + 0.16, depth / 2 + 0.005);
     g.add(m);
     slotLEDs.push(m);
   }
@@ -1405,8 +1485,26 @@ function buildGPURack(width = 1.6, height = 2.2, depth = 1.0) {
     new THREE.BoxGeometry(width * 0.9, 0.08, depth * 0.9),
     new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.4 })
   );
-  vent.position.y = height + 0.04;
+  vent.position.y = height + 0.04 + 0.16;
   g.add(vent);
+
+  // VOLTA BEACON — vertical light column rising from the node (compute uplink)
+  const beam = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.10, 0.16, 6.0, 12, 1, true),
+    new THREE.MeshBasicMaterial({ color: VC.yellow, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide })
+  );
+  beam.position.y = height + 3.0;
+  g.add(beam);
+  g.userData.beam = beam;
+
+  // floating Volta diamond beacon
+  const beacon = new THREE.Mesh(
+    new THREE.OctahedronGeometry(0.34, 0),
+    new THREE.MeshBasicMaterial({ color: VC.yellow })
+  );
+  beacon.position.y = height + 1.1;
+  g.add(beacon);
+  g.userData.beacon = beacon;
 
   // heat plume (cone) — visibility tied to utilization
   const plume = new THREE.Mesh(
@@ -1419,6 +1517,10 @@ function buildGPURack(width = 1.6, height = 2.2, depth = 1.0) {
   plume.position.y = height + 1.5;
   g.add(plume);
   g.userData.plume = plume;
+
+  // mark every mesh so a click anywhere on the node = "Volta asset" click
+  g.traverse(o => { if (o.isMesh) o.userData.voltaAsset = true; });
+  g.userData.isVoltaAsset = true;
 
   return g;
 }
@@ -1818,6 +1920,55 @@ function registerThemedMaterials() {
 registerThemedMaterials();
 
 /* ────────────────────────────────────────────────────────────────────
+   COMPUTE DESTINATIONS — "dove va il compute": holographic client nodes
+   floating above the scene. GPU streams flow up here in Compute view.
+   ──────────────────────────────────────────────────────────────────── */
+const COMPUTE_CLIENTS = [
+  { id: 'inference', label: 'Inference enterprise', sub: 'RAG · documenti privati', color: 0x359EFE, angle: -0.6, radius: 46, y: 30 },
+  { id: 'gaming',    label: 'Cloud gaming · rendering', sub: 'streaming a bassa latenza', color: 0x818CF8, angle: 0.7, radius: 50, y: 35 },
+  { id: 'agents',    label: 'Agenti · computer vision', sub: 'voice AI · edge industriale', color: 0x22d3ee, angle: 2.0, radius: 44, y: 27 },
+  { id: 'sovereign', label: 'Sovereign · PA · difesa', sub: 'dati locali, sovrani', color: 0xFFE42B, angle: 3.5, radius: 52, y: 38 },
+];
+const clientNodes = new THREE.Group();
+scene.add(clientNodes);
+const clientNodeObjs = {};
+COMPUTE_CLIENTS.forEach(c => {
+  const grp = new THREE.Group();
+  const x = Math.cos(c.angle) * c.radius;
+  const z = Math.sin(c.angle) * c.radius;
+  grp.position.set(x, c.y, z);
+
+  // holographic core (icosahedron wireframe + glowing center)
+  const core = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(2.2, 0),
+    new THREE.MeshBasicMaterial({ color: c.color, transparent: true, opacity: 0.22 })
+  );
+  grp.add(core);
+  const wire = new THREE.LineSegments(
+    new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(2.6, 0)),
+    new THREE.LineBasicMaterial({ color: c.color, transparent: true, opacity: 0.8 })
+  );
+  grp.add(wire);
+  const spark = new THREE.Mesh(
+    new THREE.SphereGeometry(0.7, 16, 16),
+    new THREE.MeshBasicMaterial({ color: c.color })
+  );
+  grp.add(spark);
+  // halo ring
+  const halo = new THREE.Mesh(
+    new THREE.RingGeometry(3.2, 3.6, 40),
+    new THREE.MeshBasicMaterial({ color: c.color, transparent: true, opacity: 0.4, side: THREE.DoubleSide, depthWrite: false })
+  );
+  halo.lookAt(0, c.y, 0);
+  grp.add(halo);
+
+  grp.userData = { ...c, core, wire, spark, halo, worldPos: new THREE.Vector3(x, c.y, z) };
+  clientNodes.add(grp);
+  clientNodeObjs[c.id] = grp;
+});
+clientNodes.visible = true;
+
+/* ────────────────────────────────────────────────────────────────────
    PARTICLE FLOWS  (animated energy/compute streams)
    ──────────────────────────────────────────────────────────────────── */
 class FlowParticleSystem {
@@ -2064,8 +2215,8 @@ function updateScene(dt) {
     st.gridKW = gridFlow;
 
     /* Visual updates */
-    // panels: emissive ramps with solarP
-    const pIntensity = solarP * 1.6;
+    // panels: emissive ramps with solarP — amplified in Energy view
+    const pIntensity = solarP * 1.6 * (0.55 + viewMix.energy * 0.55);
     g.userData.solar.userData.panels.forEach(p => {
       if (!p.material.userData.cloned) { p.material = p.material.clone(); p.material.userData.cloned = true; }
       p.material.emissive = new THREE.Color(VC.yellow);
@@ -2097,6 +2248,27 @@ function updateScene(dt) {
     const plumeOpacity = Math.min(0.45, state.util * 0.55);
     g.userData.gpu.userData.plume.material.opacity = plumeOpacity;
     g.userData.gpu.userData.plume.scale.y = 0.6 + state.util * 1.0;
+
+    // VOLTA asset highlight — beacon spin/pulse + light column, emphasised in Compute view
+    const gpuU = g.userData.gpu.userData;
+    const compEmph = 0.5 + viewMix.compute * 0.5;
+    const tnow = performance.now();
+    if (gpuU.beacon) {
+      gpuU.beacon.rotation.y += dt * 1.6;
+      gpuU.beacon.rotation.x += dt * 0.7;
+      const bp = 0.85 + 0.25 * Math.sin(tnow * 0.004 + idx);
+      gpuU.beacon.scale.setScalar(bp * (0.8 + viewMix.compute * 0.5));
+    }
+    if (gpuU.beam) {
+      gpuU.beam.material.opacity = (0.08 + state.util * 0.14) * compEmph;
+      gpuU.beam.scale.x = gpuU.beam.scale.z = 0.8 + 0.2 * Math.sin(tnow * 0.003);
+    }
+    if (gpuU.pedestal) {
+      gpuU.pedestal.material.opacity = (0.35 + state.util * 0.3) * (0.7 + viewMix.compute * 0.4);
+      gpuU.pedestal.scale.setScalar(1 + 0.05 * Math.sin(tnow * 0.004 + idx));
+    }
+    // beacon turns Volta-blue in Compute view, yellow otherwise
+    if (gpuU.beacon) gpuU.beacon.material.color.setHex(viewMix.compute > 1.2 ? VC.blue : VC.yellow);
 
     // CER neighbourhood: windows, rooftop PV, mini-compute nodes
     if (uc.consumerProfile === 'homes') {
@@ -2152,6 +2324,19 @@ function updateScene(dt) {
   pylon.userData.ring.material.opacity = 0.45 + 0.18 * Math.sin(performance.now() * 0.003);
   pylon.rotation.y += dt * 0.05;
 
+  // Compute client nodes — spin + pulse, brighter in Compute view
+  const cnow = performance.now();
+  clientNodes.children.forEach((grp, i) => {
+    grp.userData.wire.rotation.y += dt * 0.4;
+    grp.userData.wire.rotation.x += dt * 0.15;
+    grp.userData.core.rotation.y -= dt * 0.3;
+    const pulse = 0.7 + 0.3 * Math.sin(cnow * 0.0025 + i);
+    grp.userData.spark.scale.setScalar(pulse * (0.7 + viewMix.compute * 0.5));
+    grp.userData.halo.material.opacity = (0.25 + 0.2 * Math.sin(cnow * 0.003 + i)) * (0.5 + viewMix.compute * 0.4);
+    grp.userData.core.material.opacity = 0.16 + viewMix.compute * 0.12;
+    grp.userData.halo.lookAt(camera.position);
+  });
+
   // Animate flow particles
   flow.update(dt);
 
@@ -2184,6 +2369,10 @@ function siteWorld(g, localOffset) {
   return new THREE.Vector3().copy(localOffset).applyMatrix4(g.matrixWorld);
 }
 
+function hexArr(hex) {
+  return [ ((hex >> 16) & 255) / 255, ((hex >> 8) & 255) / 255, (hex & 255) / 255 ];
+}
+
 function spawnSiteParticles(uc, g, st, batteryFlow, gridFlow, dt) {
   const solarPos = siteWorld(g, new THREE.Vector3(5, 1.2, 2.5));
   const batPos   = siteWorld(g, new THREE.Vector3(-5.5, 1.2, 4.5));
@@ -2194,10 +2383,13 @@ function spawnSiteParticles(uc, g, st, batteryFlow, gridFlow, dt) {
                                                                   new THREE.Vector3(-3, 1.0, 0));
   const pylonPos = new THREE.Vector3(0, 9.5, 0);
 
-  // Solar → load (yellow)
+  const eMix = viewMix.energy, cMix = viewMix.compute, gMix = viewMix.grid;
+  const beaconPos = siteWorld(g, new THREE.Vector3(-3.5, 3.4, 5.0)); // Volta node uplink point
+
+  // Solar → load (yellow) — energy view amplifies
   const solarKW = st.solarOutputKW;
   if (solarKW > 0.5) {
-    const n = clamp(Math.round(solarKW * dt * 1.5), 0, 7);
+    const n = clamp(Math.round(solarKW * dt * 1.5 * eMix), 0, 8);
     for (let i = 0; i < n; i++) {
       flow.spawn({ curve: curveBetween(solarPos, loadPos, 2.0 + Math.random()*0.6), color: COLOR.yellow, life: 1.8 + Math.random()*0.4, size: 6.5 });
     }
@@ -2205,30 +2397,31 @@ function spawnSiteParticles(uc, g, st, batteryFlow, gridFlow, dt) {
 
   // Solar → battery if charging
   if (batteryFlow > 0.3) {
-    const n = clamp(Math.round(batteryFlow * dt * 1.6), 0, 6);
+    const n = clamp(Math.round(batteryFlow * dt * 1.6 * eMix), 0, 7);
     for (let i = 0; i < n; i++) {
       flow.spawn({ curve: curveBetween(solarPos, batPos, 1.8), color: COLOR.green, life: 1.6 + Math.random()*0.3, size: 6.5 });
     }
   }
 
-  // Solar / battery → GPU
+  // Solar / battery → Volta node (powering the compute)
   if (st.gpuKW > 0.5) {
     const fromBat = batteryFlow < -0.3;
     const src = fromBat ? batPos : solarKW > 0.5 ? solarPos : pylonPos;
     const col = fromBat ? COLOR.green : solarKW > 0.5 ? COLOR.yellow : COLOR.blue;
-    const n = clamp(Math.round(st.gpuKW * dt * 1.3), 0, 6);
+    const n = clamp(Math.round(st.gpuKW * dt * 1.3 * (0.4 + Math.max(eMix, cMix) * 0.6)), 0, 6);
     for (let i = 0; i < n; i++) {
       flow.spawn({ curve: curveBetween(src, gpuPos, 1.8), color: col, life: 1.6 + Math.random()*0.3, size: 7 });
     }
   }
 
-  // GPU → compute-sold (upward cyan into "cloud")
-  const computeIntensity = state.util * (siteState[uc.id].gpuKW || 0);
-  if (computeIntensity > 1) {
-    const n = clamp(Math.round(computeIntensity * dt * 0.4), 0, 4);
+  // Volta node → COMPUTE DESTINATIONS (where the compute goes): client nodes in the sky
+  const computeIntensity = state.util * (st.gpuKW || 0);
+  if (computeIntensity > 0.5 && clientNodes.children.length) {
+    const n = clamp(Math.round(computeIntensity * dt * 0.55 * (0.3 + cMix * 0.85)), 0, 7);
     for (let i = 0; i < n; i++) {
-      const sky = new THREE.Vector3(gpuPos.x + (Math.random()-0.5)*4, gpuPos.y + 12 + Math.random()*4, gpuPos.z + (Math.random()-0.5)*4);
-      flow.spawn({ curve: curveBetween(gpuPos, sky, 0.5), color: COLOR.cyan, life: 2.0 + Math.random()*0.6, size: 8 });
+      const target = clientNodes.children[Math.floor(Math.random() * clientNodes.children.length)];
+      const tp = target.userData.worldPos;
+      flow.spawn({ curve: curveBetween(beaconPos, tp, 7 + Math.random()*5), color: hexArr(target.userData.color), life: 2.4 + Math.random()*0.9, size: 7.5 });
     }
   }
 
@@ -2239,43 +2432,44 @@ function spawnSiteParticles(uc, g, st, batteryFlow, gridFlow, dt) {
     const consumers = houses.filter(h => !h.userData.isProsumer);
     const wpos = (h, y = 1.6) => new THREE.Vector3(h.position.x, y, h.position.z).applyMatrix4(g.matrixWorld);
     // shared energy → consumers (green = energia condivisa, earns TIP)
-    const nShare = clamp(Math.round(st.solarOutputKW * dt * 0.25), 0, 4);
+    const nShare = clamp(Math.round(st.solarOutputKW * dt * 0.25 * eMix), 0, 5);
     for (let i = 0; i < nShare; i++) {
       const p = prosumers[Math.floor((performance.now() * 0.013 + i) % prosumers.length)];
       const c = consumers[Math.floor((performance.now() * 0.017 + i) % consumers.length)];
       if (p && c) flow.spawn({ curve: curveBetween(wpos(p, 2.1), wpos(c, 1.2), 1.6), color: COLOR.green, life: 1.6, size: 6 });
     }
-    // prosumer → its own compute node (yellow = autoconsumo verso compute)
+    // prosumer-with-compute → its mini-node → client destination
     prosumers.filter(h => h.userData.hasCompute).forEach(h => {
-      if (Math.random() < state.util * 0.5) {
+      if (Math.random() < state.util * 0.5 * (0.4 + cMix * 0.7)) {
         const node = new THREE.Vector3(h.position.x + 1.35, 1.2, h.position.z + 0.2).applyMatrix4(g.matrixWorld);
         flow.spawn({ curve: curveBetween(wpos(h, 2.0), node, 1.0), color: COLOR.yellow, life: 1.3, size: 6 });
-        // compute → sky (cyan)
-        const sky = new THREE.Vector3(node.x + (Math.random()-0.5)*2, node.y + 8, node.z + (Math.random()-0.5)*2);
-        flow.spawn({ curve: curveBetween(node, sky, 0.4), color: COLOR.cyan, life: 1.8, size: 6.5 });
+        if (clientNodes.children.length) {
+          const target = clientNodes.children[Math.floor(Math.random() * clientNodes.children.length)];
+          flow.spawn({ curve: curveBetween(node, target.userData.worldPos, 8 + Math.random()*4), color: hexArr(target.userData.color), life: 2.4, size: 6.5 });
+        }
       }
     });
   }
 
-  // BIO heat recovery: GPU → digester
+  // BIO heat recovery: Volta node → digester (amber) — compute byproduct
   if (uc.id === 'bio' && st.gpuKW > 1 && g.userData.dome) {
     const dome = new THREE.Vector3().copy(g.userData.dome.position).add(new THREE.Vector3(0, 2.5, 0)).applyMatrix4(g.matrixWorld);
-    const n = clamp(Math.round(st.gpuKW * dt * 0.8), 0, 4);
+    const n = clamp(Math.round(st.gpuKW * dt * 0.8 * (0.4 + cMix * 0.6)), 0, 4);
     for (let i = 0; i < n; i++) {
       flow.spawn({ curve: curveBetween(gpuPos, dome, 1.5), color: COLOR.amber, life: 1.4 + Math.random()*0.4, size: 7 });
     }
   }
 
-  // Grid import / export
+  // Grid import / export — emphasised in Energy/Network views
   if (gridFlow > 0.5) {
     // import: pylon → site (red)
-    const n = clamp(Math.round(gridFlow * dt * 1.2), 0, 5);
+    const n = clamp(Math.round(gridFlow * dt * 1.2 * gMix), 0, 6);
     for (let i = 0; i < n; i++) {
       flow.spawn({ curve: curveBetween(pylonPos, loadPos, 0.4), color: COLOR.red, life: 1.8, size: 6.5 });
     }
   } else if (gridFlow < -0.5) {
     // export: site → pylon (cyan-blue)
-    const n = clamp(Math.round(-gridFlow * dt * 1.2), 0, 5);
+    const n = clamp(Math.round(-gridFlow * dt * 1.2 * gMix), 0, 6);
     for (let i = 0; i < n; i++) {
       flow.spawn({ curve: curveBetween(solarPos, pylonPos, 0.4), color: COLOR.blue, life: 1.8, size: 6.5 });
     }
@@ -2417,46 +2611,62 @@ document.getElementById('btn-help').addEventListener('click', () => {
 });
 
 /* View tabs */
+const TAB_ACCENT = { network: 'v-pill-yellow', energy: 'v-pill-green', compute: 'v-pill-blue', economics: 'v-pill-yellow' };
+function setActiveTab(view) {
+  document.querySelectorAll('.view-tab').forEach(b => {
+    b.classList.remove('v-pill-yellow', 'v-pill-green', 'v-pill-blue', 'v-pill-neutral');
+    b.classList.add(b.dataset.view === view ? (TAB_ACCENT[b.dataset.view] || 'v-pill-yellow') : 'v-pill-neutral');
+  });
+}
 document.querySelectorAll('.view-tab').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.view-tab').forEach(b => {
-      b.classList.remove('v-pill-yellow'); b.classList.add('v-pill-neutral');
-    });
-    btn.classList.remove('v-pill-neutral'); btn.classList.add('v-pill-yellow');
     state.view = btn.dataset.view;
+    setActiveTab(state.view);
     applyView();
   });
 });
-document.querySelector('.view-tab[data-view="network"]').classList.remove('v-pill-neutral');
-document.querySelector('.view-tab[data-view="network"]').classList.add('v-pill-yellow');
-document.querySelectorAll('.view-tab').forEach(b => {
-  if (!b.classList.contains('v-pill-yellow')) b.classList.add('v-pill-neutral');
-});
+setActiveTab('network');
+
+/* View mixing — each tab re-weights what the scene emphasises and what flows */
+const viewMix = { energy: 1, compute: 1, grid: 1, econ: 0 };
+const VIEW_CONFIG = {
+  network:   { energy: 1.0, compute: 1.0, grid: 1.3, econ: 0, bloom: 0.72,
+    accent: '#FFE42B', caption: 'Rete · flussi vivi di energia e compute tra siti, batterie e rete elettrica' },
+  energy:    { energy: 1.8, compute: 0.22, grid: 1.4, econ: 0, bloom: 0.98,
+    accent: '#22c55e', caption: 'Energia · FV prodotto, batteria stoccata, consumi e scambio con la rete' },
+  compute:   { energy: 0.28, compute: 2.0, grid: 0.45, econ: 0, bloom: 1.1,
+    accent: '#359EFE', caption: 'Compute · dove va la capacità GPU → inference, RAG, cloud gaming, agenti' },
+  economics: { energy: 0.5, compute: 0.6, grid: 0.5, econ: 1, bloom: 0.55,
+    accent: '#FFE42B', caption: 'Economics · ricavi €/anno per sito e marginalità del fleet' },
+};
 
 function applyView() {
-  // bloom is much subtler on a light background (additive glow washes out white)
-  const bm = state.theme === 'light' ? 0.22 : 1.0;
-  // visual emphasis based on view
-  if (state.view === 'energy') {
-    bloomPass.strength = 0.95 * bm;
-    setSitesEmphasis({ solar: 1.4, battery: 1.4, gpu: 0.8 });
-  } else if (state.view === 'compute') {
-    bloomPass.strength = 1.05 * bm;
-    setSitesEmphasis({ solar: 0.7, battery: 0.7, gpu: 1.6 });
-  } else if (state.view === 'economics') {
-    bloomPass.strength = 0.6 * bm;
-    setSitesEmphasis({ solar: 1.0, battery: 1.0, gpu: 1.0 });
-  } else {
-    bloomPass.strength = 0.72 * bm;
-    setSitesEmphasis({ solar: 1.0, battery: 1.0, gpu: 1.0 });
-  }
-}
+  const bm = state.theme === 'light' ? 0.28 : 1.0;
+  const cfg = VIEW_CONFIG[state.view] || VIEW_CONFIG.network;
+  viewMix.energy = cfg.energy;
+  viewMix.compute = cfg.compute;
+  viewMix.grid = cfg.grid;
+  viewMix.econ = cfg.econ;
+  bloomPass.strength = cfg.bloom * bm;
 
-function setSitesEmphasis(mul) {
-  // attach as scene-wide multipliers via userData
-  Object.values(siteGroups).forEach(g => {
-    g.userData.emphasis = mul;
-  });
+  // caption banner
+  const cap = document.getElementById('view-caption');
+  if (cap) {
+    cap.querySelector('.vc-text').textContent = cfg.caption;
+    cap.style.setProperty('--accent', cfg.accent);
+    cap.classList.add('show');
+    clearTimeout(window.__capT);
+    window.__capT = setTimeout(() => cap.classList.remove('show'), 4200);
+  }
+
+  // client/destination nodes are prominent in network + compute views
+  if (typeof clientNodes !== 'undefined' && clientNodes) {
+    clientNodes.visible = viewMix.compute > 0.5;
+  }
+  // economics floating € labels
+  if (typeof econLabels !== 'undefined') {
+    Object.values(econLabels).forEach(el => el.classList.toggle('show', viewMix.econ > 0));
+  }
 }
 
 /* ────────── THEME (dark / light) ────────── */
@@ -2771,6 +2981,43 @@ USECASES.forEach(uc => {
   labels[uc.id] = el;
 });
 
+// Compute destination labels (the "where the compute goes" endpoints)
+const clientLabels = {};
+COMPUTE_CLIENTS.forEach(c => {
+  const hex = '#' + c.color.toString(16).padStart(6, '0');
+  const el = document.createElement('div');
+  el.className = 'scene-label';
+  el.style.cursor = 'default';
+  el.innerHTML = `<span class="dot" style="background:${hex}; box-shadow:0 0 8px ${hex};"></span>${c.label}`;
+  labelContainer.appendChild(el);
+  clientLabels[c.id] = el;
+});
+
+// Economics floating € labels (per site, shown in Economics view)
+const econLabels = {};
+USECASES.forEach(uc => {
+  const el = document.createElement('div');
+  el.className = 'econ-label';
+  el.innerHTML = `<span class="el-val">€0</span><span class="el-sub">${uc.name}</span>`;
+  labelContainer.appendChild(el);
+  econLabels[uc.id] = el;
+});
+
+// CER prosumer / consumer / compute tags (shown when CER is selected)
+const cerHouseTags = [];
+(() => {
+  const cerSite = siteGroups['cer'];
+  if (!cerSite || !cerSite.userData.houses) return;
+  cerSite.userData.houses.forEach(h => {
+    const type = h.userData.hasCompute ? 'compute' : (h.userData.isProsumer ? 'prosumer' : 'consumer');
+    const el = document.createElement('div');
+    el.className = `cer-tag ${type}`;
+    el.textContent = h.userData.hasCompute ? 'Prosumer + Volta' : (h.userData.isProsumer ? 'Prosumer · FV' : 'Consumer');
+    labelContainer.appendChild(el);
+    cerHouseTags.push({ el, house: h, site: cerSite });
+  });
+})();
+
 function project(v3) {
   const v = v3.clone();
   v.project(camera);
@@ -2780,16 +3027,57 @@ function project(v3) {
 }
 
 function updateLabels() {
-  USECASES.forEach(uc => {
+  USECASES.forEach((uc, idx) => {
     const g = siteGroups[uc.id];
     const pos = new THREE.Vector3().copy(g.userData.tagAnchor).applyMatrix4(g.matrixWorld);
     const p = project(pos);
     const el = labels[uc.id];
-    if (p.behind) { el.style.display = 'none'; return; }
+    if (p.behind) { el.style.display = 'none'; }
+    else {
+      el.style.display = 'block';
+      el.style.left = `${p.x}px`;
+      el.style.top  = `${p.y}px`;
+      el.classList.toggle('active', state.selectedSite === uc.id);
+    }
+
+    // economics € label near each site
+    const ec = econLabels[uc.id];
+    const ep = project(new THREE.Vector3(0, 3.2, 0).applyMatrix4(g.matrixWorld));
+    if (viewMix.econ > 0 && !ep.behind) {
+      const e = nodeEconomics(state.price, state.util, state.energy);
+      const rev = e.revenue * (nodeDistribution[idx] || 1);
+      ec.querySelector('.el-val').textContent = euroShort(rev) + '/anno';
+      ec.style.left = `${ep.x}px`;
+      ec.style.top  = `${ep.y}px`;
+      ec.classList.add('show');
+    } else {
+      ec.classList.remove('show');
+    }
+  });
+
+  // compute destination labels
+  COMPUTE_CLIENTS.forEach(c => {
+    const el = clientLabels[c.id];
+    const grp = clientNodeObjs[c.id];
+    const show = viewMix.compute > 0.5 && clientNodes.visible;
+    const p = project(grp.userData.worldPos.clone().add(new THREE.Vector3(0, 3.6, 0)));
+    if (!show || p.behind) { el.style.display = 'none'; return; }
     el.style.display = 'block';
     el.style.left = `${p.x}px`;
     el.style.top  = `${p.y}px`;
-    el.classList.toggle('active', state.selectedSite === uc.id);
+  });
+
+  // CER prosumer/consumer tags — only when CER selected
+  const cerShown = state.selectedSite === 'cer';
+  cerHouseTags.forEach(({ el, house, site }) => {
+    if (!cerShown) { el.classList.remove('show'); el.style.display = 'none'; return; }
+    const world = new THREE.Vector3(house.position.x, 2.5, house.position.z).applyMatrix4(site.matrixWorld);
+    const p = project(world);
+    if (p.behind) { el.classList.remove('show'); el.style.display = 'none'; return; }
+    el.style.display = 'block';
+    el.style.left = `${p.x}px`;
+    el.style.top  = `${p.y}px`;
+    el.classList.add('show');
   });
 }
 
@@ -2798,23 +3086,50 @@ function updateLabels() {
    ──────────────────────────────────────────────────────────────────── */
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-sceneEl.addEventListener('click', e => {
+function pickAtPointer(e) {
   const r = sceneEl.getBoundingClientRect();
   mouse.x = ((e.clientX - r.left) / W()) * 2 - 1;
   mouse.y = -((e.clientY - r.top) / H()) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const candidates = Object.values(siteGroups).map(g => g.children).flat();
   const hits = raycaster.intersectObjects(candidates, true);
-  if (hits.length > 0) {
-    let n = hits[0].object;
-    while (n && !n.parent?.userData?.id && n.parent) n = n.parent;
-    const id = n?.parent?.userData?.id;
-    if (id) selectSite(id);
+  if (!hits.length) return null;
+  let cur = hits[0].object, isVolta = false, siteId = null;
+  while (cur) {
+    if (cur.userData?.voltaAsset || cur.userData?.isVoltaAsset) isVolta = true;
+    if (cur.userData?.id) { siteId = cur.userData.id; break; }
+    cur = cur.parent;
+  }
+  return siteId ? { siteId, isVolta } : null;
+}
+
+let dragMoved = false;
+sceneEl.addEventListener('mousedown', () => { sceneEl.classList.add('dragging'); dragMoved = false; });
+window.addEventListener('mousemove', () => { if (sceneEl.classList.contains('dragging')) dragMoved = true; });
+window.addEventListener('mouseup', () => sceneEl.classList.remove('dragging'));
+
+sceneEl.addEventListener('click', e => {
+  if (dragMoved) return; // ignore clicks that were camera drags
+  const pick = pickAtPointer(e);
+  if (!pick) return;
+  selectSite(pick.siteId);
+  if (pick.isVolta) {
+    document.querySelector('.view-tab[data-view="compute"]').click();
+    toast('Volta Compute · dove va la capacità GPU');
   }
 });
 
-sceneEl.addEventListener('mousedown', () => sceneEl.classList.add('dragging'));
-window.addEventListener('mouseup', () => sceneEl.classList.remove('dragging'));
+// hover → pointer cursor over interactive sites
+let hoverRaf = 0;
+sceneEl.addEventListener('mousemove', e => {
+  if (sceneEl.classList.contains('dragging')) return;
+  if (hoverRaf) return;
+  hoverRaf = requestAnimationFrame(() => {
+    hoverRaf = 0;
+    const pick = pickAtPointer(e);
+    sceneEl.style.cursor = pick ? 'pointer' : 'grab';
+  });
+});
 
 /* ────────────────────────────────────────────────────────────────────
    TIME-OF-DAY DISPLAY + SUN ARC POSITION
