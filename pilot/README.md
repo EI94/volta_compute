@@ -56,6 +56,7 @@ cp .env.example .env
 # Genera una API key robusta e inseriscila in .env
 openssl rand -hex 32
 
+chmod +x scripts/*.sh
 ./scripts/preflight.sh
 docker compose pull
 docker compose up -d
@@ -66,6 +67,12 @@ Per vedere i log:
 
 ```bash
 docker compose logs -f vllm
+```
+
+Per raccogliere telemetria GPU locale:
+
+```bash
+./scripts/collect-metrics.sh 60
 ```
 
 Per spegnere senza cancellare la cache dei modelli:
@@ -100,4 +107,4 @@ Prima di caricare dati reali del cliente:
 - costo cloud effettivo;
 - ricavo, margine lordo e prezzo equivalente per GPU-hour.
 
-I gate economici e tecnici sono in [`commercial/ACCEPTANCE_GATES.md`](commercial/ACCEPTANCE_GATES.md). La configurazione hardware consigliata è in [`HARDWARE_BOM.md`](HARDWARE_BOM.md).
+I gate economici e tecnici sono in [`commercial/ACCEPTANCE_GATES.md`](commercial/ACCEPTANCE_GATES.md). La configurazione hardware consigliata è in [`HARDWARE_BOM.md`](HARDWARE_BOM.md). L'offerta commerciale iniziale è in [`commercial/PRICING.md`](commercial/PRICING.md).
