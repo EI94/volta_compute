@@ -1,0 +1,73 @@
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: volta-vllm
+    restart: unless-stopped
+    ipc: host
+    environment:
+      HUGGING_FACE_HUB_TOKEN: ${HF_TOKEN:-}
+      HF_TOKEN: ${HF_TOKEN:-}
+    command:
+      - --model
+      - ${MODEL_ID}
+      - --served-model-name
+      - ${SERVED_MODEL_NAME}
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --dtype
+      - auto
+      - --max-model-len
+      - ${MAX_MODEL_LEN:-8192}
+      - --gpu-memory-utilization
+      - ${GPU_MEMORY_UTILIZATION:-0.90}
+      - --api-key
+      - ${VLLM_API_KEY}
+      - --download-dir
+      - /models
+    volumes:
+      - model-cache:/models
+    expose:
+      - "8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          python3 -c "import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5).read()"
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 180s
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: volta-caddy
+    restart: unless-stopped
+    depends_on:
+      vllm:
+        condition: service_healthy
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+      - ./logs:/var/log/caddy
+
+volumes:
+  model-cache:
+  caddy-data:
+  caddy-config:
